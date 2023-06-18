@@ -16,6 +16,7 @@ jobs:
       - name: Set INSTALLER_NAME if not set
         env: 
           INSTALLER_NAME: ${{ GITHUB_REF }}
+        run: echo $INSTALLER_NAME
       - name: Print Github Variables
         run: |
           echo "GITHUB_REF:$GITHUB_REF"
