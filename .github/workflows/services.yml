@@ -14,10 +14,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Set INSTALLER_NAME if not set
-        #env: 
-        #  INSTALLER_NAME: ${{ GITHUB_REF }}
+        env: 
+          INSTALLER_NAME: ${{ github.ref_name }}
         run: |
-          export INSTALLER_NAME=${GITHUB_REF}
           echo "Installer_name: ${INSTALLER_NAME}"
       - name: Print Github Variables
         run: |
