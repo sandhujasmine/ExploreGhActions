@@ -12,7 +12,7 @@ jobs:
   svc_installer:
     name: setup svc instalelr
     runs-on: ubuntu-latest
-    uses: ./.github/workflows/svc-installers.yml
+    uses: ./.github/workflows/svc-installer.yml
     with:
       INSTALLER_NAME: ${{ matrix.INSTALLER_NAME }}
   print_env_vars:
