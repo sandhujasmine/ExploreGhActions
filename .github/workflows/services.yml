@@ -2,8 +2,8 @@ name: Print Github Env Variables
 on:
   push:
     branches:
-      # when PR is merged into main, it is a push event
-      - main
+      # when PR is merged into main, it is a push event but 
+      # GITHUB_REF now becomes:refs/heads/main but now we need GITHUB_HEAD_REF services/<name> 
       - 'services/**'
   workflow_dispatch:
 
@@ -16,8 +16,10 @@ jobs:
     steps:
       - name: Get leaf of branch name
         env:
-          # github.head_ref should exist only when PR is merged?
-          BRANCH: ${{ github.head_ref || github.ref_name }}
+          # github.event_name == 'push', use github.ref_name since github.head_ref is empty
+          # github.event_name == 'pull_request', use github.head_ref since github.ref_name is main 
+          # which is not what we want!
+          BRANCH: ${{ github.ref }}
         id: leaf
         run: echo "branch=${BRANCH##*/}" >> $GITHUB_OUTPUT
       - name: echo event name
