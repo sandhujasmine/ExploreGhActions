@@ -9,12 +9,12 @@ on:
   workflow_dispatch:
 
 jobs:
-  #svc_installer:
-  #  name: setup svc instalelr
-  #  runs-on: ubuntu-latest
-  #  uses: ./.github/workflows/svc-installer.yml
-  #  with:
-  #    INSTALLER_NAME: ${{ steps.leaf.outputs.branch }}
+  svc_installer:
+    name: setup svc instalelr
+    runs-on: ubuntu-latest
+    uses: ./.github/workflows/svc-installer.yml
+    with:
+      INSTALLER_NAME: ${{ steps.leaf.outputs.branch }}
   print_env_vars:
     name: Print Github Variables
     runs-on: ubuntu-latest
@@ -24,7 +24,6 @@ jobs:
           BRANCH: ${{ github.ref_name }}
         id: leaf
         run: echo "branch=${BRANCH##*/}" >> $GITHUB_OUTPUT
-        #run: echo "::set-output name=branch::${BRANCH##*/}"
 
       - name: Print Github Variables
         run: |
