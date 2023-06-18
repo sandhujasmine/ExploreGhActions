@@ -26,9 +26,9 @@ jobs:
           echo "GITHUB_EVENT_PATH:$GITHUB_EVENT_PATH"
           echo "GITHUB_WORKSPACE:$GITHUB_WORKSPACE"
           echo
-          echo "From GITHUB_REF:${GITHUB_REF##*/}"
-          echo "From GITHUB_HEAD_REF:${GITHUB_HEAD_REF##*/}"
-          echo "From GITHUB_BASE_REF:${GITHUB_BASE_REF##*/}"
+          echo "From GITHUB_REF:" ${{ github.ref}}
+          echo "From GITHUB_HEAD_REF: ${{ github.head_ref }}
+          echo "From GITHUB_BASE_REF: ${{ github.base_ref }}
 
       - name: Print complete webhook event payload
         run: cat $GITHUB_EVENT_PATH
