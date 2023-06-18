@@ -14,9 +14,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Set INSTALLER_NAME if not set
-        env: 
-          INSTALLER_NAME: ${{ GITHUB_REF }}
-        run: echo $INSTALLER_NAME
+        #env: 
+        #  INSTALLER_NAME: ${{ GITHUB_REF }}
+        run: |
+          export INSTALLER_NAME=${GITHUB_REF}
+          echo "Installer_name: ${INSTALLER_NAME}"
       - name: Print Github Variables
         run: |
           echo "GITHUB_REF:$GITHUB_REF"
@@ -30,6 +32,8 @@ jobs:
           echo "From GITHUB_REF:${GITHUB_REF##*/}"
           echo "From GITHUB_HEAD_REF:${GITHUB_HEAD_REF##*/}"
           echo "From GITHUB_BASE_REF:${GITHUB_BASE_REF##*/}"
+          echo
+          echo "Installer_name: ${INSTALLER_NAME}"
 
       - name: Print complete webhook event payload
         run: cat $GITHUB_EVENT_PATH
