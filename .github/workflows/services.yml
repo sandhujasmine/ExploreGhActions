@@ -12,6 +12,8 @@ jobs:
   installer_name:
     name: Set installler_name
     runs-on: ubuntu-latest
+    outputs:
+      installer_name: ${{ steps.leaf.outputs.branch }}
     steps:
       - name: Get leaf of branch name
         env:
@@ -20,7 +22,7 @@ jobs:
         run: echo "branch=${BRANCH##*/}" >> $GITHUB_OUTPUT
   svc_installer:
     name: setup svc instalelr
-    runs-on: ubuntu-latest
     uses: ./.github/workflows/svc-installer.yml
+    needs: installer_name
     with:
-      INSTALLER_NAME: ${{ steps.leaf.outputs.branch }}
+      INSTALLER_NAME: ${{ needs.installer_name.outputs.installer_name }}

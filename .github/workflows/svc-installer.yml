@@ -9,30 +9,14 @@ on:
         required: true
 
 jobs:
-  #echo_name:
-  #  runs-on: ubuntu-latest
-  #  name: Set installer_name
-  #  environment:
-  #    name: ${{ inputs.ENVIRONMENT }}
-
-  #  steps:
-  #  - name: Check env vars
-  #    run: "echo INSTALLER_NAME: " ${{ inputs.INSTALLER_NAME }}
-
   print_env_vars:
     name: Print Github Variables
     runs-on: ubuntu-latest
     steps:
-      - name: Get leaf of branch name
-        env:
-          BRANCH: ${{ github.ref_name }}
-        id: leaf
-        run: echo "branch=${BRANCH##*/}" >> $GITHUB_OUTPUT
-
       - name: Print Github Variables
         run: |
           echo
-          echo "installer_name: " ${{ steps.leaf.outputs.branch }}
+          echo "installer_name: " ${{ inputs.INSTALLER_NAME }}
           echo
           echo "GITHUB_REF:$GITHUB_REF"
           echo "GITHUB_HEAD_REF:$GITHUB_HEAD_REF"
