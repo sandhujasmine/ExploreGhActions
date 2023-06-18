@@ -1,11 +1,8 @@
 name: Print Github Env Variables
 on:
-  pull_request:
-    # to run CI after branch is merged into main
-    types:
-      - closed
   push:
     branches:
+      # when PR is merged into main, it is a push event
       - main
       - 'services/**'
   workflow_dispatch:
@@ -27,8 +24,7 @@ jobs:
         run: |
           echo "GITHUB_EVENT_NAME: " ${{ github.event_name }}
   svc_installer:
-    # do this on all push events or when a services PR is merged
-    if: github.event_name == 'push' || (github.event.pull_request.merged == true && contains( ${{ github.head_ref }}, "services")
+    # if: startsWith( ${{ github.head_ref }}, "refs/heads/services")
     name: Setup svc installler
     uses: ./.github/workflows/svc-installer.yml
     needs: installer_name
