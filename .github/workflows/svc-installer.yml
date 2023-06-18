@@ -17,4 +17,4 @@ jobs:
 
     steps:
     - name: Check env vars
-      run: echo "INSTALLER_NAME: ${{ inputs.INSTALLER_NAME }}"
+      run: "echo INSTALLER_NAME: " ${{ inputs.INSTALLER_NAME }}
