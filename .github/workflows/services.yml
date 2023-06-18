@@ -9,15 +9,20 @@ on:
   workflow_dispatch:
 
 jobs:
-  env_vars:
+  svc_installer:
+    name: setup svc instalelr
+    runs-on: ubuntu-latest
+    uses: ./.github/workflows/svc-installers.yml
+    with:
+      INSTALLER_NAME: ${{ matrix.INSTALLER_NAME }}
+  print_env_vars:
     name: Print Github Variables
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        INSTALLER_NAME: [ ${{ github.github_ref }} ]
     steps:
-      - name: Set INSTALLER_NAME if not set
-        env: 
-          INSTALLER_NAME: ${{ github.ref_name##*/ }}
-        run: |
-          echo "Installer_name: ${INSTALLER_NAME}"
       - name: Print Github Variables
         run: |
           echo "GITHUB_REF:$GITHUB_REF"
@@ -31,8 +36,6 @@ jobs:
           echo "From GITHUB_REF:${GITHUB_REF##*/}"
           echo "From GITHUB_HEAD_REF:${GITHUB_HEAD_REF##*/}"
           echo "From GITHUB_BASE_REF:${GITHUB_BASE_REF##*/}"
-          echo
-          echo "Installer_name: ${INSTALLER_NAME}"
 
       - name: Print complete webhook event payload
         run: cat $GITHUB_EVENT_PATH
