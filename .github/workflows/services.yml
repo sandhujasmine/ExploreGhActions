@@ -21,7 +21,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        INSTALLER_NAME: [ ${{ github.github_ref }} ]
+        INSTALLER_NAME: [ ${{ github.ref }} ]
     steps:
       - name: Print Github Variables
         run: |
