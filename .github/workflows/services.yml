@@ -23,8 +23,8 @@ jobs:
         env:
           BRANCH: ${{ github.ref_name }}
         id: leaf
-        #run: echo "branch=${}" >> $GITHUB_OUTPUT
-        run: echo "::set-output name=branch::${BRANCH##*/}"
+        run: echo "branch=${BRANCH##*/}" >> $GITHUB_OUTPUT
+        #run: echo "::set-output name=branch::${BRANCH##*/}"
 
       - name: Print Github Variables
         run: |
