@@ -1,10 +1,12 @@
 name: Print Github Env Variables
 on:
   pull_request:
-    branches:
-      - 'services/**'
+    # to run CI after branch is merged into main
+    types:
+      - closed
   push:
     branches:
+      - main
       - 'services/**'
   workflow_dispatch:
 
@@ -17,11 +19,17 @@ jobs:
     steps:
       - name: Get leaf of branch name
         env:
-          BRANCH: ${{ github.ref_name || github.head_ref }}
+          # github.head_ref should exist only when PR is merged?
+          BRANCH: ${{ github.head_ref || github.ref_name }}
         id: leaf
         run: echo "branch=${BRANCH##*/}" >> $GITHUB_OUTPUT
+      - name: echo event name
+        run: |
+          echo "GITHUB_EVENT_NAME: " ${{ github.event_name }}
   svc_installer:
-    name: setup svc instalelr
+    # do this on all push events or when a services PR is merged
+    if: github.event_name == 'push' || (github.event.pull_request.merged == true && contains( ${{ github.head_ref }}, "services")
+    name: Setup svc installler
     uses: ./.github/workflows/svc-installer.yml
     needs: installer_name
     with:
