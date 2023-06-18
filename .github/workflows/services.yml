@@ -9,19 +9,14 @@ on:
   workflow_dispatch:
 
 jobs:
-  define-installer-name:
-    name: Define env var
-    steps:
-      - name: define installer_name
-        run: export I
-  print-env-variabes:
+  env_vars:
     needs: define-installer-name
     name: Print Github Variables
     runs-on: ubuntu-latest
     steps:
-     - name: Set INSTALLER_NAME if not set
-       env: 
-         INSTALLER_NAME: ${{ GITHUB_REF }}
+      - name: Set INSTALLER_NAME if not set
+        env: 
+          INSTALLER_NAME: ${{ GITHUB_REF }}
       - name: Print Github Variables
         run: |
           echo "GITHUB_REF:$GITHUB_REF"
