@@ -1,5 +1,9 @@
 name: Print Github Env Variables
 on:
+  pull_request:
+    # run CI after merged into main
+    types:
+      - closed
   push:
     branches:
       # when PR is merged into main, it is a push event but 
@@ -14,19 +18,32 @@ jobs:
     outputs:
       installer_name: ${{ steps.leaf.outputs.branch }}
     steps:
-      - name: Get leaf of branch name
+      - name: Leaf of branch on push
+        if: github.event_name == 'push'
         env:
           # github.event_name == 'push', use github.ref_name since github.head_ref is empty
           # github.event_name == 'pull_request', use github.head_ref since github.ref_name is main 
           # which is not what we want!
+          # github.ref and github.ref_name appear to be the same on push events
+          #
+          # NOTE: we could do the following and omit the 'Leaf on pull_request' but that seems
+          # brittle, ie:  BRANCH: ${{ github.head_ref || github.ref }}
+          #
           BRANCH: ${{ github.ref }}
         id: leaf
+        run: echo "branch=${BRANCH##*/}" >> $GITHUB_OUTPUT
+      - name: Leaf on pull_request
+        if: github.event_name == 'pull_request'
+        env:
+          BRANCH: ${{ github.head_ref }}
         run: echo "branch=${BRANCH##*/}" >> $GITHUB_OUTPUT
       - name: echo event name
         run: |
           echo "GITHUB_EVENT_NAME: " ${{ github.event_name }}
   svc_installer:
-    # if: startsWith( ${{ github.head_ref }}, "refs/heads/services")
+    # run on all push events or pull_request events if source branch is services/
+    # on pull_request event github.head_ref must be defined
+    if: github.event_name == 'push' || (contains( ${{ github.head_ref }}, "services/" && github.event.pull_request.merged == true)
     name: Setup svc installler
     uses: ./.github/workflows/svc-installer.yml
     needs: installer_name
