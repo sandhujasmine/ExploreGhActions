@@ -23,6 +23,9 @@ jobs:
           BRANCH: ${{ github.head_ref || github.ref_name }}
         id: leaf
         run: echo "branch=${BRANCH##*/}" >> $GITHUB_OUTPUT
+      - name: echo event name
+        run: |
+          echo "GITHUB_EVENT_NAME: " ${{ github.event_name }}
   svc_installer:
     # do this on all push events or when a services PR is merged
     if: github.event_name == 'push' || (github.event.pull_request.merged == true && contains( ${{ github.head_ref }}, "services")
