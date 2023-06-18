@@ -16,7 +16,7 @@ jobs:
     name: Set installler_name
     runs-on: ubuntu-latest
     outputs:
-      installer_name: ${{ steps.leaf.outputs.branch }}
+      installer_name: ${{ steps.leaf1.outputs.branch || steps.leaf2.outputs.branch }}
     steps:
       - name: Leaf of branch on push
         if: github.event_name == 'push'
@@ -30,12 +30,13 @@ jobs:
           # brittle, ie:  BRANCH: ${{ github.head_ref || github.ref }}
           #
           BRANCH: ${{ github.ref }}
-        id: leaf
+        id: leaf1
         run: echo "branch=${BRANCH##*/}" >> $GITHUB_OUTPUT
       - name: Leaf on pull_request
         if: github.event_name == 'pull_request'
         env:
           BRANCH: ${{ github.head_ref }}
+        id: leaf2
         run: echo "branch=${BRANCH##*/}" >> $GITHUB_OUTPUT
       - name: echo event name
         run: |
