@@ -7,6 +7,10 @@ on:
     branches:
       - 'services/**'
   workflow_dispatch:
+
+env:
+  INSTALLER_NAME: "${{ GITHUB_REF }}
+
 jobs:
   print-env-variabes:
     name: Print Github Variables
@@ -22,8 +26,11 @@ jobs:
           echo "GITHUB_EVENT_PATH:$GITHUB_EVENT_PATH"
           echo "GITHUB_WORKSPACE:$GITHUB_WORKSPACE"
           echo
-          echo "current_branch:${GITHUB_HEAD_REF##*/}"
-          echo "base_branch:${GITHUB_BASE_REF##*/}"
+          echo "From GITHUB_REF:${GITHUB_REF##*/}"
+          echo "From GITHUB_HEAD_REF:${GITHUB_HEAD_REF##*/}"
+          echo "From GITHUB_BASE_REF:${GITHUB_BASE_REF##*/}"
+          echo
+          echo "INSTALLER_NAME: ${INSTALLER_NAME}"
 
       - name: Print complete webhook event payload
         run: cat $GITHUB_EVENT_PATH
