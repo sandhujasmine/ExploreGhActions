@@ -10,7 +10,6 @@ on:
 
 jobs:
   env_vars:
-    needs: define-installer-name
     name: Print Github Variables
     runs-on: ubuntu-latest
     steps:
