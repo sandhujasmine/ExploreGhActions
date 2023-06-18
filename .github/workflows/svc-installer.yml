@@ -9,12 +9,42 @@ on:
         required: true
 
 jobs:
-  echo_name:
-    runs-on: ubuntu-latest
-    name: Set installer_name
-    environment:
-      name: ${{ inputs.ENVIRONMENT }}
+  #echo_name:
+  #  runs-on: ubuntu-latest
+  #  name: Set installer_name
+  #  environment:
+  #    name: ${{ inputs.ENVIRONMENT }}
 
+  #  steps:
+  #  - name: Check env vars
+  #    run: "echo INSTALLER_NAME: " ${{ inputs.INSTALLER_NAME }}
+
+  print_env_vars:
+    name: Print Github Variables
+    runs-on: ubuntu-latest
     steps:
-    - name: Check env vars
-      run: "echo INSTALLER_NAME: " ${{ inputs.INSTALLER_NAME }}
+      - name: Get leaf of branch name
+        env:
+          BRANCH: ${{ github.ref_name }}
+        id: leaf
+        run: echo "branch=${BRANCH##*/}" >> $GITHUB_OUTPUT
+
+      - name: Print Github Variables
+        run: |
+          echo
+          echo "installer_name: " ${{ steps.leaf.outputs.branch }}
+          echo
+          echo "GITHUB_REF:$GITHUB_REF"
+          echo "GITHUB_HEAD_REF:$GITHUB_HEAD_REF"
+          echo "GITHUB_SHA:$GITHUB_SHA"
+          echo "GITHUB_WORKFLOW:$GITHUB_WORKFLOW"
+          echo "GITHUB_EVENT_NAME:$GITHUB_EVENT_NAME"
+          echo "GITHUB_EVENT_PATH:$GITHUB_EVENT_PATH"
+          echo "GITHUB_WORKSPACE:$GITHUB_WORKSPACE"
+          echo
+          echo "From GITHUB_REF:${GITHUB_REF##*/}"
+          echo "From GITHUB_HEAD_REF:${GITHUB_HEAD_REF##*/}"
+          echo "From GITHUB_BASE_REF:${GITHUB_BASE_REF##*/}"
+
+      - name: Print complete webhook event payload
+        run: cat $GITHUB_EVENT_PATH
