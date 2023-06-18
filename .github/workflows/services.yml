@@ -44,7 +44,7 @@ jobs:
   svc_installer:
     # run on all push events or pull_request events if source branch is services/
     # on pull_request event github.head_ref must be defined
-    if: github.event_name == 'push' || (contains( ${{ github.head_ref }}, "services/" && github.event.pull_request.merged == true)
+    if: github.event_name == 'push' || contains( github.head_ref, 'services') 
     name: Setup svc installler
     uses: ./.github/workflows/svc-installer.yml
     needs: installer_name
