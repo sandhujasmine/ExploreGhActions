@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 env:
-  INSTALLER_NAME: "${{ GITHUB_REF }}
+  INSTALLER_NAME: ${{ GITHUB_REF }}
 
 jobs:
   print-env-variabes:
@@ -30,7 +30,7 @@ jobs:
           echo "From GITHUB_HEAD_REF:${GITHUB_HEAD_REF##*/}"
           echo "From GITHUB_BASE_REF:${GITHUB_BASE_REF##*/}"
           echo
-          echo "INSTALLER_NAME: ${INSTALLER_NAME}"
+          echo "INSTALLER_NAME:${INSTALLER_NAME}"
 
       - name: Print complete webhook event payload
         run: cat $GITHUB_EVENT_PATH
