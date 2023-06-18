@@ -18,10 +18,10 @@ jobs:
   print_env_vars:
     name: Print Github Variables
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        INSTALLER_NAME: [ ${{ steps.leaf.outputs.branch }}  ]
+    #strategy:
+    #  fail-fast: false
+    #  matrix:
+    #    INSTALLER_NAME: [ ${{ steps.leaf.outputs.branch }} ]
     steps:
       - name: Get leaf of branch name
         id: leaf
