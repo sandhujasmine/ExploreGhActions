@@ -1,0 +1,32 @@
+name: Print Github Env Variables
+on:
+  pull_request:
+    # when PR is merged into main, it is a push event; however, 
+    # GITHUB_REF changes to refs/heads/main so we need GITHUB_HEAD_REF services/<name> 
+    # Therefore, use this to run workflow after merge into main
+    types:
+      - closed
+  push:
+    branches:
+      - 'services/**'
+      - main
+
+jobs:
+    print_env_vars:
+        name: Print Github Variables
+        runs-on: ubuntu-latest
+        steps:
+          - name: Print Github Variables
+            run: |
+              echo
+              echo "GITHUB_REF:$GITHUB_REF"
+              echo "GITHUB_HEAD_REF:$GITHUB_HEAD_REF"
+              echo "GITHUB_SHA:$GITHUB_SHA"
+              echo "GITHUB_WORKFLOW:$GITHUB_WORKFLOW"
+              echo "GITHUB_EVENT_NAME:$GITHUB_EVENT_NAME"
+              echo "GITHUB_EVENT_PATH:$GITHUB_EVENT_PATH"
+              echo "GITHUB_WORKSPACE:$GITHUB_WORKSPACE"
+              echo
+              echo "From GITHUB_REF:" ${{ github.ref}}
+              echo "From GITHUB_HEAD_REF: ${{ github.head_ref }}
+              echo "From GITHUB_BASE_REF: ${{ github.base_ref }}
