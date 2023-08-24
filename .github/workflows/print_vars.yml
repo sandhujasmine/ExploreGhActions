@@ -31,6 +31,6 @@ jobs:
               echo "GITHUB_WORKSPACE:$GITHUB_WORKSPACE"
               echo
               echo "From GITHUB_REF:" ${{ github.ref}}
-              echo "From GITHUB_HEAD_REF: ${{ github.head_ref }}
-              echo "From GITHUB_BASE_REF: ${{ github.base_ref }}
+              echo "From GITHUB_HEAD_REF:" ${{ github.head_ref }}
+              echo "From GITHUB_BASE_REF:" ${{ github.base_ref }}
               echo "github.action_path: " ${{ github.action_path }}
