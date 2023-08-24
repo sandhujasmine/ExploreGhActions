@@ -10,6 +10,9 @@ on:
     branches:
       - 'services/**'
       - main
+    paths:
+      - products/**
+
 
 jobs:
     print_env_vars:
@@ -30,3 +33,4 @@ jobs:
               echo "From GITHUB_REF:" ${{ github.ref}}
               echo "From GITHUB_HEAD_REF: ${{ github.head_ref }}
               echo "From GITHUB_BASE_REF: ${{ github.base_ref }}
+              echo "github.action_path: " ${{ github.action_path }}
