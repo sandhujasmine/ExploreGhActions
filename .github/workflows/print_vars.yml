@@ -9,7 +9,7 @@ on:
   push:
     branches:
       - 'services/**'
-      - main
+      #- main
     paths:
       - products/**
 
