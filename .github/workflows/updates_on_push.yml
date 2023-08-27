@@ -3,27 +3,98 @@ on:
   push:
     branches:
       - "*"
+      - 'services/**'
     paths:
       - products/**
 
 jobs:
-  changed_files:
+  get_product_dir:
     runs-on: ubuntu-latest  # windows-latest || macos-latest
     name: Test changed-files
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    outputs:
+      product_dir: ${{ steps.from_added_files.outputs.product_dir || steps.from_branchname.outputs.product_dir }}
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0  # OR "2" -> To retrieve the preceding commit.
-
       # Example 1
       - name: Get changed files
         id: changed-files
         uses: tj-actions/changed-files@v38
-
       # NOTE: `since_last_remote_commit: true` is implied by default and falls back to the previous local commit.
-
-      - name: List all added files
+      - name: Get product-dir from added files
+        id: from_added_files
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
         run: |
           for file in ${{ steps.changed-files.outputs.added_files }}; do
-            echo "$file was added"
+            # Assumptions:
+            # - config.json is only added to recipes that need to be built
+            # - For now, assume config.json belongs inside products/services as an extra check
+            if [ $(basename ${file}) = "config.json" ]; then
+              echo "Found "
+              echo "product_dir=dirname ${X}" >> $GITHUB_OUTPUT
+              echo ${product_dir}
+              break
+            fi
           done
+      - name: Product directory name from branch
+        id: from_branchname
+        if: startsWith( github.head_ref, 'services/') 
+        # run this on every push to the services branch
+        env:
+          # github.event_name == 'push', use github.ref_name iro github.ref
+          # github.ref and github.ref_name appear to be the same on push events
+          #
+          BRANCH: ${{ github.ref }}
+        run: |
+          CUSTOMER_FOLDER=$(dirname ${BRANCH#*heads/})
+          ZENDESK_TCKT_NO=$(cut -d '-' -f 1 <<< ${BRANCH##*/})
+          echo "product_dir=${CUSTOMER_FOLDER}/${ZENDESK_TCKT_NO}" >> $GITHUB_OUTPUT
+          echo $product_dir
+  get_config:
+    name: Load config from config.json
+    runs-on: ubuntu-latest
+    needs: get_product_dir
+    outputs:
+      installer_name: ${{ steps.load_from_config.outputs.installer_name }}
+      installer_version: ${{ steps.load_from_config.outputs.installer_version }}
+      matrix_py_ver: ${{ steps.load_from_config.outputs.matrix_py_ver }}
+      matrix_installer: ${{ steps.load_from_config.outputs.matrix_installer }}
+      product_dir: ${{ needs.get_product_dir.outputs.product_dir }}
+    env:
+      CONFIG_JSON: ${{ needs.get_product_dir.outputs.product_dir }}/config.json
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3
+        with:
+          sparse-checkout: ${CONFIG_JSON}
+      - name: Load env vars and build matrix from config
+        id: load_from_config
+        run: |
+          # do not set if installer_name or installer_version is 'null'
+          INST_NAME=$(jq -rc '.installer_name | select( . != null )' ${CONFIG_JSON})
+          echo "installer_name=$INST_NAME" >> $GITHUB_OUTPUT
+          INST_VER=$(jq -rc '.installer_version | select( . != null )' ${CONFIG_JSON})
+          echo "installer_version=$INST_VER" >> $GITHUB_OUTPUT
+          echo matrix_installer=$(jq -c '.target_platforms' ${CONFIG_JSON} | \
+            xargs -I {} jq -c '.[] | select(.TARGET_PLATFORM | inside("{}"))' products/services/matrix.json | \
+            jq -s '.') >> $GITHUB_OUTPUT
+          echo matrix_py_ver=$(jq -c '.py_ver' ${CONFIG_JSON} ) >> $GITHUB_OUTPUT
+  print_config_vars:
+    name: Load config from config.json
+    runs-on: ubuntu-latest
+    needs: get_config
+    strategy:
+      fail-fast: false
+      matrix:
+        PY_VER: ${{ fromJson(needs.get_config.outputs.matrix_py_ver) }}
+        INSTALLER: ${{ fromJSON(needs.get_config.outputs.matrix_installer) }}
+    steps:
+      - name: Print config variables
+        run: |
+          echo "INSTALLER_NAME: " ${{ needs.get_config.outputs.installer_name }}
+          echo "INSTALLER_VERSION: " ${{ needs.get_config.outputs.installer_version }}
+          echo "PRODUCT_DIR: " ${{ needs.get_config.outputs.product_dir }}
+          echo "MATRIX_PY_VER: " ${{ matrix.PY_VER }}
+          echo "MATRIX_INSTALLERS: " ${{ matrix.INSTALLER }}
