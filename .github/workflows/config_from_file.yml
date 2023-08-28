@@ -23,7 +23,8 @@ jobs:
           - name: Checkout code
             uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9  # v3
             with:
-              sparse-checkout: ${CONFIG_JSON}
+              sparse-checkout: |
+                ${CONFIG_JSON}
           - name: Load env vars and build matrix from config
             id: load_from_config
             run: |
