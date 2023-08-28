@@ -29,9 +29,9 @@ jobs:
             # - config.json is only added to recipes that need to be built
             # - For now, assume config.json belongs inside products/services as an extra check
             if [ $(basename ${file}) = "config.json" ]; then
-              echo "Found "
-              echo "product_dir=dirname ${X}" >> $GITHUB_OUTPUT
-              echo ${product_dir}
+              product_dir=$(dirname ${X})
+              echo "product_dir=${product_dir}" >> $GITHUB_OUTPUT
+              echo "Found ${product_dir}"
               break
             fi
           done
