@@ -2,7 +2,6 @@ name: Print Github Env Variables
 on:
   push:
     branches:
-      - "*"
       - 'services/**'
     paths:
       - products/**
@@ -11,11 +10,11 @@ jobs:
   get_product_dir:
     runs-on: ubuntu-latest  # windows-latest || macos-latest
     name: Test changed-files
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     outputs:
       product_dir: ${{ steps.from_added_files.outputs.product_dir || steps.from_branchname.outputs.product_dir }}
     steps:
       - uses: actions/checkout@v3
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
         with:
           fetch-depth: 0  # OR "2" -> To retrieve the preceding commit.
       # Example 1
