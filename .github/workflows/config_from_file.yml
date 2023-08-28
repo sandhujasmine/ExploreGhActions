@@ -18,7 +18,7 @@ jobs:
           matrix_py_ver: ${{ steps.load_from_config.outputs.matrix_py_ver }}
           matrix_installer: ${{ steps.load_from_config.outputs.matrix_installer }}
         env:
-          CONFIG_JSON: ${PRODUCT_DIR}/config.json
+          CONFIG_JSON: ${{ inputs.PRODUCT_DIR }}/config.json
         steps:
           - name: Checkout code
             uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9  # v3
@@ -28,7 +28,6 @@ jobs:
             id: load_from_config
             run: |
               # print input vars
-              echo "PRODUCT_DIR: " ${PRODUCT_DIR}
               echo "CONFIG_JSON: " ${CONFIG_JSON}
               for file in ${PRODUCT_DIR}; do
                 echo "FOUND - " ${file}
