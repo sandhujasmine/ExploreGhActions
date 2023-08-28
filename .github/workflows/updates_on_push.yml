@@ -3,8 +3,7 @@ on:
   push:
     branches:
       - 'services/**'
-    paths:
-      - products/**
+      - main
 
 jobs:
   get_product_dir:
