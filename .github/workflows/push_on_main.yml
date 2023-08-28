@@ -1,1 +1,43 @@
+name: Load and print config variables
+on:
+  push:
+    branches:
+      - main
 
+jobs:
+  get_product_dir:
+    runs-on: ubuntu-latest  # windows-latest || macos-latest
+    name: Test changed-files
+    outputs:
+      product_dir: ${{ steps.from_added_files.outputs.product_dir }}
+    steps:
+      - uses: actions/checkout@v3
+        id: checkout
+        with:
+          fetch-depth: 0  # OR "2" -> To retrieve the preceding commit.
+      # Example 1
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v38
+      # NOTE: `since_last_remote_commit: true` is implied by default and falls back to the previous local commit.
+      - name: Get product-dir from added files
+        id: from_added_files
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        run: |
+          for file in ${{ steps.changed-files.outputs.added_files }}; do
+            # Assumptions:
+            # - config.json is only added to recipes that need to be built
+            # - For now, assume config.json belongs inside products/services as an extra check
+            if [ $(basename ${file}) = "config.json" ]; then
+              product_dir=$(dirname ${file})
+              echo "product_dir=${product_dir}" >> $GITHUB_OUTPUT
+              echo "Found ${product_dir}"
+              break
+            fi
+          done
+  print_config_vars:
+    name: Print vars loaded from config.json
+    uses: ./.github/workflows/config_from_file.yml
+    needs: get_product_dir
+    with:
+      PRODUCT_DIR: ${{ needs.get_product_dir.outputs.product_dir }}
