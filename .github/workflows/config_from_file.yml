@@ -27,6 +27,12 @@ jobs:
           - name: Load env vars and build matrix from config
             id: load_from_config
             run: |
+              # print input vars
+              echo "PRODUCT_DIR: " ${PRODUCT_DIR}
+              echo "CONFIG_JSON: " ${CONFIG_JSON}
+              for file in ${PRODUCT_DIR}; do
+                echo "FOUND - " ${file}
+              done
               # do not set if installer_name or installer_version is 'null'
               INST_NAME=$(jq -rc '.installer_name | select( . != null )' ${CONFIG_JSON})
               echo "installer_name=$INST_NAME" >> $GITHUB_OUTPUT
