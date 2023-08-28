@@ -22,6 +22,8 @@ jobs:
         run: |
           CUSTOMER_FOLDER=$(dirname ${BRANCH#*heads/})
           ZENDESK_TCKT_NO=$(cut -d '-' -f 1 <<< ${BRANCH##*/})
+          echo $CUSTOMER_FOLDER
+          echo $ZENDESK_TCKT_NO
           echo "product_dir=${CUSTOMER_FOLDER}/${ZENDESK_TCKT_NO}" >> $GITHUB_OUTPUT
           echo $product_dir
   print_config_vars:
