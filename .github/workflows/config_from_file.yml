@@ -55,6 +55,6 @@ jobs:
             run: |
               echo "INSTALLER_NAME: " ${{ needs.get_config.outputs.installer_name }}
               echo "INSTALLER_VERSION: " ${{ needs.get_config.outputs.installer_version }}
-              echo "PRODUCT_DIR: " ${PRODUCT_DIR}
+              echo "PRODUCT_DIR: " ${{ inputs.PRODUCT_DIR }}
               echo "MATRIX_PY_VER: " ${{ matrix.PY_VER }}
               echo "MATRIX_INSTALLERS: " ${{ matrix.INSTALLER.TARGET_PLATFORM }}
