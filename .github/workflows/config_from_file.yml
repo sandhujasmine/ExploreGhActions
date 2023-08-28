@@ -21,10 +21,11 @@ jobs:
           CONFIG_JSON: ${{ inputs.PRODUCT_DIR }}/config.json
         steps:
           - name: Checkout code
-            uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9  # v3
+            uses: actions/checkout@v3
             with:
-              sparse-checkout: |
-                ${CONFIG_JSON}
+              fetch-depth: 0
+              #sparse-checkout: |
+              #  ${CONFIG_JSON}
           - name: Load env vars and build matrix from config
             id: load_from_config
             run: |
