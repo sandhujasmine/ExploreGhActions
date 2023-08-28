@@ -29,7 +29,7 @@ jobs:
             run: |
               # print input vars
               echo "CONFIG_JSON: " ${CONFIG_JSON}
-              for file in ${{ inputs.PRODUCT_DIR }}; do
+              for file in ${{ inputs.PRODUCT_DIR }}/*; do
                 echo "FOUND - " ${file}
               done
               # do not set if installer_name or installer_version is 'null'
