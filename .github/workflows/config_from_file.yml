@@ -29,6 +29,8 @@ jobs:
             run: |
               # print input vars
               echo "CONFIG_JSON: " ${CONFIG_JSON}
+              echo "Current path: " ${PWD}
+              echo "ls -al: " ${ls -al}
               for file in ${{ inputs.PRODUCT_DIR }}/*; do
                 echo "FOUND - " ${file}
               done
