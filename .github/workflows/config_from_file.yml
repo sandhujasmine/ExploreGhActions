@@ -23,20 +23,15 @@ jobs:
           - name: Checkout code
             uses: actions/checkout@v3
             with:
-              fetch-depth: 0
-              #sparse-checkout: |
-              #  ${CONFIG_JSON}
+              sparse-checkout: |
+                products/services/matrix.json
+                ${{ inputs.PRODUCT_DIR }}/config.json
+                # TODO: Investigate and log issue - for some reason, I cannot use env var below
+                #   It must be constructed from inputs
+                # ${CONFIG_JSON}
           - name: Load env vars and build matrix from config
             id: load_from_config
             run: |
-              # print input vars
-              echo "CONFIG_JSON: " ${CONFIG_JSON}
-              echo "Current path: " ${PWD}
-              ls -al
-              echo "See files here"
-              for file in ${{ inputs.PRODUCT_DIR }}/*; do
-                echo "FOUND - " ${file}
-              done
               # do not set if installer_name or installer_version is 'null'
               INST_NAME=$(jq -rc '.installer_name | select( . != null )' ${CONFIG_JSON})
               echo "installer_name=$INST_NAME" >> $GITHUB_OUTPUT
@@ -62,4 +57,4 @@ jobs:
               echo "INSTALLER_VERSION: " ${{ needs.get_config.outputs.installer_version }}
               echo "PRODUCT_DIR: " ${PRODUCT_DIR}
               echo "MATRIX_PY_VER: " ${{ matrix.PY_VER }}
-              echo "MATRIX_INSTALLERS: " ${{ matrix.INSTALLER }}
+              echo "MATRIX_INSTALLERS: " ${{ matrix.INSTALLER.TARGET_PLATFORM }}
