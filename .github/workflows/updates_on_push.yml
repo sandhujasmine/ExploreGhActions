@@ -7,13 +7,12 @@ on:
 jobs:
   get_product_dir:
     runs-on: ubuntu-latest  # windows-latest || macos-latest
-    name: Test changed-files
+    name: Get product dir from branch name
     outputs:
       product_dir: ${{ steps.from_branchname.outputs.product_dir }}
     steps:
       - name: Product directory name from branch
         id: from_branchname
-        if: startsWith( github.head_ref, 'services/') 
         # run this on every push to the services branch
         env:
           # github.event_name == 'push', use github.ref_name iro github.ref
