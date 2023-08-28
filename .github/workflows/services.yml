@@ -1,14 +1,14 @@
 name: Print Github Env Variables
 on:
-  pull_request:
-    # run CI after merged into main
-    types:
-      - closed
-  push:
-    branches:
-      # when PR is merged into main, it is a push event but 
-      # GITHUB_REF now becomes:refs/heads/main but now we need GITHUB_HEAD_REF services/<name> 
-      - 'services/**'
+  #pull_request:
+  #  # run CI after merged into main
+  #  types:
+  #    - closed
+  #push:
+  #  branches:
+  #    # when PR is merged into main, it is a push event but 
+  #    # GITHUB_REF now becomes:refs/heads/main but now we need GITHUB_HEAD_REF services/<name> 
+  #    - 'services/**'
   workflow_dispatch:
 
 jobs:

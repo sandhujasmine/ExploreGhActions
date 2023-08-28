@@ -1,4 +1,4 @@
-name: Print Github Env Variables
+name: Load and print config variables
 on:
   push:
     branches:
