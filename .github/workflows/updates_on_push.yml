@@ -25,14 +25,6 @@ jobs:
           echo products/${CUSTOMER_FOLDER}/${ZENDESK_TCKT_NO}
           echo "product_dir=products/${CUSTOMER_FOLDER}/${ZENDESK_TCKT_NO}" >> $GITHUB_OUTPUT
           echo $product_dir
-  print_inputs:
-    name: Print inputs
-    runs-on: ubuntu-latest
-    needs: get_product_dir
-    steps:
-      - name: Print product_dir
-        run: |
-          echo "product_dir: " ${{ needs.get_product_dir.outputs.product_dir }}
   print_config_vars:
     name: Print vars loaded from config.json
     uses: ./.github/workflows/config_from_file.yml
