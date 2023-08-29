@@ -39,7 +39,7 @@ jobs:
             fi
           done
   check_skip:
-    name: Print vars loaded from config.json
+    name: Print skip var
     runs-on: ubuntu-latest
     needs: get_product_dir
     if: ${{ needs.get_product_dir.outputs.skip }}
