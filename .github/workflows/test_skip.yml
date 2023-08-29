@@ -20,3 +20,9 @@ jobs:
               id: print_skip
               run: |
                 echo "skip = " ${{ steps.set_skip.outputs.skip }}
+
+            - name: Print skip if true
+              id: print_skip_if_true
+              if: ${{ steps.set_skip.outputs.skip }}
+              run: |
+                echo "skip = " ${{ steps.set_skip.outputs.skip }}
