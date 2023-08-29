@@ -24,7 +24,7 @@ jobs:
         id: from_added_files
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
         run: |
-          echo "product_dir='none'" >> $GITHUB_OUTPUT
+          echo "product_dir=none" >> $GITHUB_OUTPUT
           for file in ${{ steps.changed-files.outputs.added_files }}; do
             # Assumptions:
             # - config.json is only added to recipes that need to be built
@@ -34,7 +34,7 @@ jobs:
               echo "product_dir=${product_dir}" >> $GITHUB_OUTPUT
               break
             fi
-            echo "skip = $skip"
+            echo "product_dir = $product_dir"
           done
   check_skip:
     name: Print skip var
