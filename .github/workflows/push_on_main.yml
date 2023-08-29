@@ -25,19 +25,23 @@ jobs:
         id: from_added_files
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
         run: |
+          echo "skip=${{ true }}" >> $GITHUB_OUTPUT
           for file in ${{ steps.changed-files.outputs.added_files }}; do
             # Assumptions:
             # - config.json is only added to recipes that need to be built
             # - For now, assume config.json belongs inside products/services as an extra check
-            echo "skip=${{ true }}" >> $GITHUB_OUTPUT
             if [ $(basename ${file}) = "config.json" ]; then
               product_dir=$(dirname ${file})
               echo "product_dir=${product_dir}" >> $GITHUB_OUTPUT
-              echo "Found new ${product_dir}; run this work flow"
+              echo "FOUND new ${product_dir}; run this work flow"
               echo "skip=${{ false }}" >> $GITHUB_OUTPUT
               break
             fi
+            echo "skip = $skip"
           done
+      - name: Print skip value
+        run: |
+          echo "skip = " ${{ steps.from_added_files.outputs.skip }}
   check_skip:
     name: Print skip var
     runs-on: ubuntu-latest
