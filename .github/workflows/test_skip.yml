@@ -25,6 +25,7 @@ jobs:
         name: Print vars - these will run on different systems
         runs-on: ubuntu-latest
         needs: set_vars
+        if: ${{ !needs.set_vars.outputs.skip }}
         steps:
             - name: Print skip true
               id: print_skip
