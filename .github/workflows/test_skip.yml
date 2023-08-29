@@ -21,8 +21,12 @@ jobs:
               run: |
                 echo "skip = " ${{ steps.set_skip.outputs.skip }}
 
-            - name: Print skip if true
-              id: print_skip_if_true
-              if: ${{ !steps.set_skip.outputs.skip }}
+    print_vars:
+        name: Print vars - these will run on different systems
+        runs-on: ubuntu-latest
+        needs: set_vars
+        steps:
+            - name: Print skip true
+              id: print_skip
               run: |
-                echo "skip = " ${{ steps.set_skip.outputs.skip }}
+                echo "skip = " ${{ needs.set_vars.outputs.skip }}
