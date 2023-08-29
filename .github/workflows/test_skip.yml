@@ -1,0 +1,22 @@
+name: Test things out in a test branch
+on:
+  push:
+    branches:
+      - 'test/**'
+
+jobs:
+    set_vars:
+        name: Set a skip boolean
+        runs-on: ubuntu-latest
+        outputs:
+            skip: ${{ steps.set_skip.outputs.skip }}
+        steps:
+            - name: Set skip var
+              id: set_skip
+              run: |
+                echo "skip=${{ true }}" >> $GITHUB_OUTPUT
+
+            - name: Print skip var
+              id: print_skip
+              run: |
+                echo "skip = " ${{ steps.set_skip.outputs.skip }}

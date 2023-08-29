@@ -8,9 +8,9 @@ jobs:
   get_product_dir:
     runs-on: ubuntu-latest  # windows-latest || macos-latest
     name: Test changed-files
-    outputs:
-      product_dir: ${{ steps.from_added_files.outputs.product_dir }}
-      skip: ${{ steps.from_added_files.outputs.skip }}
+    #outputs:
+    #  product_dir: ${{ steps.from_added_files.outputs.product_dir }}
+    #  skip: ${{ steps.from_added_files.outputs.skip }}
     steps:
       - uses: actions/checkout@v3
         id: checkout
@@ -38,10 +38,15 @@ jobs:
               break
             fi
           done
-  print_config_vars:
-    name: Print vars loaded from config.json
-    uses: ./.github/workflows/config_from_file.yml
-    needs: get_product_dir
-    if: ${{ !needs.get_product_dir.outputs.skip }}
-    with:
-      PRODUCT_DIR: ${{ needs.get_product_dir.outputs.product_dir }}
+      - name: Print vars loaded from config.json
+        uses: ./.github/workflows/config_from_file.yml
+        if: ${{ !steps.from_added_files.outputs.skip }}
+        with:
+          PRODUCT_DIR: ${{ steps.from_added_files.outputs.product_dir }}
+  #print_config_vars:
+  #  name: Print vars loaded from config.json
+  #  uses: ./.github/workflows/config_from_file.yml
+  #  needs: get_product_dir
+  #  if: ${{ !needs.get_product_dir.outputs.skip }}
+  #  with:
+  #    PRODUCT_DIR: ${{ needs.get_product_dir.outputs.product_dir }}
