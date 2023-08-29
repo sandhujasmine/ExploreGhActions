@@ -10,7 +10,6 @@ jobs:
     name: Test changed-files
     outputs:
       product_dir: ${{ steps.from_added_files.outputs.product_dir }}
-      skip: ${{ steps.from_added_files.outputs.skip }}
     steps:
       - uses: actions/checkout@v3
         id: checkout
@@ -25,7 +24,7 @@ jobs:
         id: from_added_files
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
         run: |
-          echo "skip=${{ true }}" >> $GITHUB_OUTPUT
+          echo "product_dir='none'" >> $GITHUB_OUTPUT
           for file in ${{ steps.changed-files.outputs.added_files }}; do
             # Assumptions:
             # - config.json is only added to recipes that need to be built
@@ -33,20 +32,15 @@ jobs:
             if [ $(basename ${file}) = "config.json" ]; then
               product_dir=$(dirname ${file})
               echo "product_dir=${product_dir}" >> $GITHUB_OUTPUT
-              echo "FOUND new ${product_dir}; run this work flow"
-              echo "skip=${{ false }}" >> $GITHUB_OUTPUT
               break
             fi
             echo "skip = $skip"
           done
-      - name: Print skip value
-        run: |
-          echo "skip = " ${{ steps.from_added_files.outputs.skip }}
   check_skip:
     name: Print skip var
     runs-on: ubuntu-latest
     needs: get_product_dir
-    if: ${{ needs.get_product_dir.outputs.skip }}
+    if: needs.get_product_dir.outputs.product_dir == 'none'
     steps:
       - name: Check skip var
         run: |
@@ -56,6 +50,6 @@ jobs:
     name: Print vars loaded from config.json
     uses: ./.github/workflows/config_from_file.yml
     needs: get_product_dir
-    if: ${{ !needs.get_product_dir.outputs.skip }}
+    if: needs.get_product_dir.outputs.product_dir != 'none'
     with:
-      PRODUCT_DIR: ${{ needs.get_product_dir.outputs.product_dir }} || 'skip'
+      PRODUCT_DIR: ${{ needs.get_product_dir.outputs.product_dir }}
