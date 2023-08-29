@@ -10,6 +10,7 @@ jobs:
     name: Test changed-files
     outputs:
       product_dir: ${{ steps.from_added_files.outputs.product_dir }}
+      skip: ${{ steps.from_added_files.outputs.skip }}
     steps:
       - uses: actions/checkout@v3
         id: checkout
@@ -28,10 +29,12 @@ jobs:
             # Assumptions:
             # - config.json is only added to recipes that need to be built
             # - For now, assume config.json belongs inside products/services as an extra check
+            echo "skip=${{ true }}" >> $GITHUB_OUTPUT
             if [ $(basename ${file}) = "config.json" ]; then
               product_dir=$(dirname ${file})
               echo "product_dir=${product_dir}" >> $GITHUB_OUTPUT
-              echo "Found ${product_dir}"
+              echo "Found new ${product_dir}; run this work flow"
+              echo "skip=${{ false }}" >> $GITHUB_OUTPUT
               break
             fi
           done
@@ -39,5 +42,6 @@ jobs:
     name: Print vars loaded from config.json
     uses: ./.github/workflows/config_from_file.yml
     needs: get_product_dir
+    if: ${{ !needs.get_product_dir.outputs.skip }}
     with:
       PRODUCT_DIR: ${{ needs.get_product_dir.outputs.product_dir }}
