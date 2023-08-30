@@ -1,0 +1,47 @@
+name: Test things out in a test branch
+on:
+  push:
+    branches:
+      - 'test/**'
+
+jobs:
+  get_product_dir:
+    runs-on: ubuntu-latest  # windows-latest || macos-latest
+    name: Test changed-files
+    outputs:
+      product_dir: ${{ steps.from_added_files.outputs.product_dir }}
+    steps:
+      - uses: actions/checkout@v3
+        id: checkout
+        with:
+          fetch-depth: 0  # OR "2" -> To retrieve the preceding commit.
+      # Example 1
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v38
+      # NOTE: `since_last_remote_commit: true` is implied by default and falls back to the previous local commit.
+      - name: Get product-dir from added files
+        id: from_added_files
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        run: |
+          echo "product_dir=none" >> $GITHUB_OUTPUT
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            # Assumptions:
+            # - config.json is only added to recipes that need to be built
+            # - For now, assume config.json belongs inside products/services as an extra check
+            echo "Changed: " ${file}
+            if [ $(basename ${file}) = "config.json" ]; then
+              echo "product_dir=$(dirname ${file})" >> $GITHUB_OUTPUT
+              break
+            fi
+            echo "product_dir = $product_dir"
+          done
+  check_skip:
+    name: Print skip var
+    runs-on: ubuntu-latest
+    needs: get_product_dir
+    if: needs.get_product_dir.outputs.product_dir == 'none'
+    steps:
+      - name: Check skip var
+        run: |
+          echo "PRODUCT_DIR = " ${{ needs.get_product_dir.outputs.product_dir }}
