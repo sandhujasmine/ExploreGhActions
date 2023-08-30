@@ -1,5 +1,5 @@
 {
   "installer_name": "anaconda3-example",
   "py_ver": ["3.10"],
-  "target_platforms": ["linux-64"]
+  "target_platforms": ["linux-64", "win-64"]
 }
