@@ -20,6 +20,11 @@ jobs:
         id: changed-files
         uses: tj-actions/changed-files@v38
       # NOTE: `since_last_remote_commit: true` is implied by default and falls back to the previous local commit.
+      - name: Print github context
+        id: github_ref
+        run: |
+          echo "github.ref: " ${{ github.ref }}
+          echo "github.base_ref: " ${{ github.base_ref }}
       - name: Get product-dir from added files
         id: from_added_files
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/test/*' }}
