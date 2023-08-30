@@ -22,7 +22,7 @@ jobs:
       # NOTE: `since_last_remote_commit: true` is implied by default and falls back to the previous local commit.
       - name: Get product-dir from added files
         id: from_added_files
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/test' }}
         run: |
           echo "product_dir=none" >> $GITHUB_OUTPUT
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
