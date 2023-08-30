@@ -46,7 +46,6 @@ jobs:
     name: Print skip var
     runs-on: ubuntu-latest
     needs: get_product_dir
-    if: needs.get_product_dir.outputs.product_dir == 'none'
     steps:
       - name: Check skip var
         run: |
