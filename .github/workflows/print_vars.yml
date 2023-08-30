@@ -8,11 +8,7 @@ on:
   #    - closed
   push:
     branches:
-      - 'services/**'
-      #- main
-    paths:
-      - products/**
-
+      - '*'
 
 jobs:
     print_env_vars:
