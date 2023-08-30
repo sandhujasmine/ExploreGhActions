@@ -28,7 +28,7 @@ jobs:
           echo "github.event_name: " ${{ github.event_name }}
       - name: Get product-dir from added files
         id: from_added_files
-        if: github.event_name == 'push' && github.ref == 'refs/heads/test/*'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/test/added-files'
         run: |
           echo "product_dir=none" >> $GITHUB_OUTPUT
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
