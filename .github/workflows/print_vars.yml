@@ -13,6 +13,7 @@ on:
 jobs:
     print_env_vars:
       name: Print env vars
+      if: github.event_name == 'push' || (startsWith( github.head_ref, 'services/') && github.event.pull_request.merged == true)
       uses: ./.github/workflows/svc-installer.yml
       with:
         INSTALLER_NAME: "Test"
