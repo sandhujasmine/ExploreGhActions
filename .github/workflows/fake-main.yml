@@ -1,0 +1,57 @@
+name: Test merging into a fake-main branch
+on:
+  push:
+    branches:
+      - 'fake-main'
+
+jobs:
+  get_product_dir:
+    runs-on: ubuntu-latest
+    name: Test changed-files
+    outputs:
+      product_dir: ${{ steps.from_added_files.outputs.product_dir }}
+    steps:
+      - uses: actions/checkout@v3
+        id: checkout
+        with:
+          fetch-depth: 0  # OR "2" -> To retrieve the preceding commit.
+      # Example 1
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v38
+      # NOTE: `since_last_remote_commit: true` is implied by default and falls back to the previous local commit.
+      - name: Print github context
+        id: github_ref
+        run: |
+          echo "github.ref: " ${{ github.ref }}
+          echo "github.base_ref: " ${{ github.base_ref }}
+          echo "github.event_name: " ${{ github.event_name }}
+      - name: Get product-dir from added files
+        id: from_added_files
+        run: |
+          echo "product_dir=none" >> $GITHUB_OUTPUT
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            # Assumptions:
+            # - look for changes in config.json
+            echo "Changed: " ${file}
+            if [ $(basename ${file}) = "config.json" ] || [ $(basename ${file}) = "env.list" ]; then
+              echo "$(basename ${file}) changed"
+              echo "product_dir=$(dirname ${file})" >> $GITHUB_OUTPUT
+              break
+            fi
+            # - look for changes in env.list
+            # - look for changes in recipe folder
+            if [ $(basename $(dirname ${file})) = "recipe" ]; then
+              echo "$(dirname ${file}) changed"
+              echo "product_dir=$(dirname ${file})" >> $GITHUB_OUTPUT
+              break
+            fi
+          done
+  check_skip:
+    name: Print skip var
+    runs-on: ubuntu-latest
+    needs: get_product_dir
+    steps:
+      - name: Check skip var
+        run: |
+          echo "PRODUCT_DIR = " ${{ needs.get_product_dir.outputs.product_dir }}
