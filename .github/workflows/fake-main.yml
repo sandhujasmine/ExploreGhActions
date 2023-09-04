@@ -39,7 +39,7 @@ jobs:
             # Assumptions:
             # - look for changes in config.json
             echo "Changed: " ${file}
-            if [ $(basename ${file}) = "config.json" || $(basename ${file}) = "env.list" ]; then
+            if [ $(basename ${file}) = "config.json" ] || [ $(basename ${file}) = "env.list" ]; then
               echo "$(basename ${file}) changed"
               echo "product_dir=$(dirname ${file})" >> $GITHUB_OUTPUT
               break
