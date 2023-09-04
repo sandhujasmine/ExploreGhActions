@@ -14,7 +14,7 @@ on:
         #   ((startsWith( github.head_ref, 'services/') && github.event.pull_request.merged == true && github.base_ref == 'fake-main') && \
         #     'svc_merged_into_main') || 'dev')
         description: 'Name of the secrets environment'
-        default: (((github.ref == 'refs/heads/main' || github.ref == 'refs/heads/devel' || startsWith(github.ref, 'refs/tags')) && 'prod') || 'dev')
+        default: ${{ (((github.ref == 'refs/heads/main' || github.ref == 'refs/heads/devel' || startsWith(github.ref, 'refs/tags')) && 'prod') || 'dev') }}
         type: 'string'
         required: false
 
