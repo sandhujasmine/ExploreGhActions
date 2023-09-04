@@ -29,11 +29,6 @@ jobs:
       - name: Get product-dir from added files
         id: from_added_files
         run: |
-          echo "Look at added_files"
-          for added in ${{ steps.changed-files.outputs.added_files}}; do
-            echo "Added: " ${added}
-          done
-          echo "Look at all_changed_files"
           echo "product_dir=none" >> $GITHUB_OUTPUT
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
             # Assumptions:
