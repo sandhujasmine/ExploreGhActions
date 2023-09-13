@@ -1,0 +1,39 @@
+name: "Create self signed certificate"
+
+# Generates a password protected self signed certificate to be added
+# to GitHub secretes into the "dev" secrets environment for testing PRs
+# and code changes. The "prod" secrets environment contains the real
+# (not self generated) certificate to sign to be released installers.
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/generate_win_cert.yml'
+      - 'scripts/create_self_signed_certificate.ps1'
+  workflow_dispatch:
+
+concurrency:
+  # Concurrency group that uses the workflow name and PR number if available
+  # or commit SHA as a fallback. If a new build is triggered under that
+  # concurrency group while a previous build is running it will be canceled.
+  # Repeated pushes to a PR will cancel all previous builds.
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: true
+
+jobs:
+  generate:
+    runs-on: windows-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3
+
+    - name: Generate self-signed certificate (Windows)
+      shell: cmd
+      run: |
+        set "CONSTRUCTOR_SIGNING_CERTIFICATE=${{ runner.temp }}\certificate.pfx"
+        set "CONSTRUCTOR_PFX_CERTIFICATE_PASSWORD=%random%"
+        powershell scripts\create_self_signed_certificate.ps1
+        certutil -encode "%CONSTRUCTOR_SIGNING_CERTIFICATE%" "%CONSTRUCTOR_SIGNING_CERTIFICATE%.txt"
+        echo "Certificate to store as GitHub secret named WIN_CONSTRUCTOR_SIGNING_CERTIFICATE:"
+        type "%CONSTRUCTOR_SIGNING_CERTIFICATE%.txt"
+        echo "Password to store as GitHub secrete named WIN_CONSTRUCTOR_PFX_CERTIFICATE_PASSWORD: %CONSTRUCTOR_PFX_CERTIFICATE_PASSWORD%"
