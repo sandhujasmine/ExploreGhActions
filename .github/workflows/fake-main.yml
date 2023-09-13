@@ -32,14 +32,13 @@ jobs:
           echo "product_dir=none" >> $GITHUB_OUTPUT
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
             # Assumptions:
-            # - look for changes in config.json
+            # - look for changes in config.json or env.list
             echo "Changed: " ${file}
             if [ $(basename ${file}) = "config.json" ] || [ $(basename ${file}) = "env.list" ]; then
               echo "$(basename ${file}) changed"
               echo "product_dir=$(dirname ${file})" >> $GITHUB_OUTPUT
               break
             fi
-            # - look for changes in env.list
             # - look for changes in recipe folder
             if [ $(basename $(dirname ${file})) = "recipe" ]; then
               echo "$(dirname ${file}) changed"
