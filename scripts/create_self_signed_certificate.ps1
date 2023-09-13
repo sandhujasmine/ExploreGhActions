@@ -10,6 +10,6 @@ $myPwd = ConvertTo-SecureString -String "$env:CONSTRUCTOR_PFX_CERTIFICATE_PASSWO
 $pfxSplat = @{
     Cert = $myCert
     FilePath = "$env:CONSTRUCTOR_SIGNING_CERTIFICATE"
-    #Password = $myPwd
+    Password = $myPwd
 }
 Export-PfxCertificate @pfxSplat
