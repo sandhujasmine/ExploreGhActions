@@ -62,3 +62,4 @@ jobs:
           echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}" 
       - name: Debug
         uses: mxschmitt/action-tmate@v3
+        if: ${{inputs.debug_enabled}}
