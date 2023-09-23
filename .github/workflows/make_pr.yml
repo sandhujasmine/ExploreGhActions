@@ -1,0 +1,44 @@
+name: Test opening a PR
+on:
+  push:
+    branches:
+      - 'test-create-pr'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  open_pr:
+    runs-on: ubuntu-latest
+    name: Create a PR
+    steps:
+      - uses: actions/checkout@v3
+        id: checkout
+        with:
+          fetch-depth: 0  # OR "2" -> To retrieve the preceding commit.
+      #- uses: conda-incubator/setup-miniconda@3b0f2504dd76ef23b6d31f291f4913fb60ab5ff3 # v2
+      #  name: Write customer.json
+      #  with:
+      #    miniconda-version: "latest"
+      #    auto-activate-base: true 
+      - name: Add a file
+        env:
+            INSTALLER_NAME: 'installer_name'
+            SVC_BASE_INSTALLER: 'base_inst'
+            CUSTOMER_NAME: 'test-customer'
+            ORG_ID: 'abc'
+            TOKEN: '1234'
+        run: |
+          # create a customer.json
+          mkdir -p products/services/
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v5
+      - name: Check outputs
+        if: ${{ steps.cpr.outputs.pull-request-number }}
+        run: |
+          echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
+          echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}" 
+      - name: Debug
+        uses: mxschmitt/action-tmate@v3
