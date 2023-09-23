@@ -1,0 +1,64 @@
+name: Test opening a PR
+on:
+  workflow_dispatch:
+    inputs:
+      debug_enabled:
+        type: boolean
+        description: 'Enable Debugging'
+        required: false
+        default: false
+      installer_name:
+        description: New installer name
+        default: 'MinicondaPro'
+        type: string
+      svc_base_installer:
+        description: Base services installer
+        default: SvcMiniconda3-Windows-x86_64-exe.zip
+        type: string
+      customer_title:
+        description: Customer name for title page
+        default: 'Test C1'
+        required: true
+      org_id:
+        description: Unique OrgID
+        default: 'test-c1-abc'
+        required: true
+      token:
+        description: Anaconda cloud token
+        default: '1234'
+        required: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  open_pr:
+    runs-on: ubuntu-latest
+    name: Create a PR
+    steps:
+      - uses: actions/checkout@v3
+        id: checkout
+        with:
+          fetch-depth: 0  # OR "2" -> To retrieve the preceding commit.
+      - name: Add a file
+        env:
+            INSTALLER_NAME: ${{inputs.installer_name}}
+            SVC_BASE_INSTALLER: ${{inputs.svc_base_installer}}
+            CUSTOMER_TITLE: ${{inputs.customer_title}}
+            ORG_ID: ${{inputs.org_id}}
+            TOKEN: ${{inputs.token}}
+            BASE_DIR: products/services/automation
+        run: |
+          # create a customer.json
+          python scripts/customer_json.py
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v5
+      - name: Check outputs
+        if: ${{ steps.cpr.outputs.pull-request-number }}
+        run: |
+          echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
+          echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}" 
+      - name: Debug
+        uses: mxschmitt/action-tmate@v3
