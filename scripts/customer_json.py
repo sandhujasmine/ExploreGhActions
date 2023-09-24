@@ -14,3 +14,4 @@ customer_dir = Path(os.environ['BASE_DIR']) / customer_slug
 customer_dir.mkdir()
 with open(customer_dir/'customer.json', 'w') as fl:
     json.dump(d_customer, fl, indent=4)
+    fl.write('\n')

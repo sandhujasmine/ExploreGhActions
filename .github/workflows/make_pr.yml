@@ -37,6 +37,11 @@ jobs:
     runs-on: ubuntu-latest
     name: Create a PR
     steps:
+      - name: PR annotation from title
+        id: title
+        run: |
+          annotation=$(sed 's/ /-/g' <<< "${{inputs.customer_title}}")
+          echo "annotation=$annotation" >> $GITHUB_OUTPUT
       - uses: actions/checkout@v3
         id: checkout
         with:
@@ -55,11 +60,13 @@ jobs:
       - name: Create Pull Request
         id: cpr
         uses: peter-evans/create-pull-request@v5
-      - name: Check outputs
-        if: ${{ steps.cpr.outputs.pull-request-number }}
-        run: |
-          echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
-          echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}" 
+        with:
+          branch: automated/${{steps.title.outputs.annotation}}
+          labels: automation
+          title: '[Automated Installer] ${{steps.title.outputs.annotation}}'
+          body: |
+            - Automated installer build: ${{inputs.customer_title}}
+          # team-reviewers:
       - name: Debug
         uses: mxschmitt/action-tmate@v3
         if: ${{inputs.debug_enabled}}
