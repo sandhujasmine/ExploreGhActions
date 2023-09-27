@@ -10,8 +10,49 @@ on:
     branches:
       - 'services/**'
 
+  workflow_dispatch:
+
+env:
+  VAR1: 'var1'
+
 jobs:
+    print_vars:
+      name: ${{ matrix.INSTALLER.OS_NAME }}-${{ matrix.INSTALLER.ARCH }}-${{ matrix.INSTALLER.EXT }}
+      runs-on: ${{ matrix.INSTALLER.OS }}
+      env:
+        BUILD_DIR: installer
+      strategy:
+        fail-fast: false
+        matrix:
+          INSTALLER: [
+              {
+                "OS": "windows-latest",
+                "ARCH": "x86_64",
+                "EXT": "exe",
+                "OS_NAME": "Windows"
+              },
+              {
+                "OS": "ubuntu-latest",
+                "ARCH": "x86_64",
+                "EXT": "sh",
+                "OS_NAME": "Linux"
+              }
+            ]
+      steps:
+        - name: Replace token for sh installers (Linux, OSX)
+          if: contains(matrix.INSTALLER.EXT, 'sh')
+          env:
+            BUILD_PATH: ${{runner.temp}}/${{env.BUILD_DIR}}
+          run: |
+            import os
+            var = os.environ['VAR1']
+            print(f"var1: {var}")
+            build_dir = os.environ['BUILD_DIR']
+            print(f"build_dir: {build_dir}")
+          shell: python
+
     print_env_vars:
+      if: false
       name: Print env vars
       # Ensure if it runs, the ENVIRONMENT is 'dev'
       #if: github.event_name == 'push' || (startsWith( github.head_ref, 'services/') && github.event.pull_request.merged == true)
