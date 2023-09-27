@@ -14,13 +14,13 @@ on:
 
 env:
   VAR1: 'var_1'
+  BUILD_DIR: installer
 
 jobs:
     print_vars:
       name: ${{ matrix.INSTALLER.OS_NAME }}-${{ matrix.INSTALLER.ARCH }}-${{ matrix.INSTALLER.EXT }}
       runs-on: ${{ matrix.INSTALLER.OS }}
       env:
-        BUILD_DIR: installer
         NEW_DIR: ${BUILD_DIR}
       strategy:
         fail-fast: false
@@ -40,6 +40,11 @@ jobs:
               }
             ]
       steps:
+        - name: output all vars
+          run: |
+            echo "${BUILD_DIR}" >> GITHUB_STEP_SUMMARY
+            echo "${NEW_DIR}" >> GITHUB_STEP_SUMMARY
+          shell: bash
         - name: Replace token for sh installers (Linux, OSX)
           if: contains(matrix.INSTALLER.EXT, 'sh')
           env:
