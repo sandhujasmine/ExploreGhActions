@@ -1,0 +1,7 @@
+{
+    "installer_name": "MinicondaPro",
+    "svc_base_installer": "SvcMiniconda3-Windows-x86_64-exe.zip",
+    "customer_title": "Test C1",
+    "org_id": "test-c1-abc",
+    "token": "1234"
+}
