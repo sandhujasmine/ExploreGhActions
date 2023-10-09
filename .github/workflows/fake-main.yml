@@ -40,6 +40,8 @@ jobs:
           for file in ${{ steps.changed-files-dir-names.outputs.all_changed_files }}; do
             echo "Customer directory: $file"
           done
+      - name: Debug
+        uses: mxschmitt/action-tmate@v3
       - name: Print github context
         id: github_ref
         run: |
