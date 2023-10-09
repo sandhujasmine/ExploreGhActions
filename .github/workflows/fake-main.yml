@@ -34,10 +34,12 @@ jobs:
           dir_names: "true"
           files: ${{ env.SERVICES_BASE_DIR }}
       - name: Files changed
+        env:
+          DIR_CHANGED: ${{ steps.changed-files-dir-names.outputs.all_changed_files }}
         run: |
-          echo "All files: ${{ steps.changed-files-dir-names.outputs.all_changed_files }}"
+          echo "All files: ${DIR_CHANGED}"
 
-          for file in ${{ steps.changed-files-dir-names.outputs.all_changed_files }}; do
+          for file in ${DIR_CHANGED}; do
             echo "Customer directory: $file"
           done
       - name: Debug
