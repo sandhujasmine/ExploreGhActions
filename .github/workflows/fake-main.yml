@@ -43,6 +43,8 @@ jobs:
             echo "Customer directory: $file"
           done
       - name: Debug
+        env:
+          DIR_CHANGED: ${{ steps.changed-files-dir-names.outputs.all_changed_files }}
         uses: mxschmitt/action-tmate@v3
       - name: Print github context
         id: github_ref
