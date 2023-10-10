@@ -51,7 +51,7 @@ jobs:
           # In addition, first checkin coul have recipe and config.json:
           #  ['products/services/svc-6/1234', 'products/services/svc-6/1234/recipe']
           # Here the product_dir is products/services/svc-6 so let's filter and find it
-          prod_dir = Path(min(filter(lambda l: l.startswith(svc_base))))
+          prod_dir = Path(min(filter(lambda l: l.startswith(svc_base), prod_dirs)))
 
           # If change is in recipe folder, then let's keep the parent
           prod_dir = prod_dir.parent if prod_dir.name == 'recipe' else prod_dir
