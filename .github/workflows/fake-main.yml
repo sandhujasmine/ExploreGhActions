@@ -37,6 +37,7 @@ jobs:
         id: get_product_dir
         env:
           DIR_CHANGED: ${{ steps.changed-files-dir-names.outputs.all_changed_files }}
+        shell: python
         run: |
           import os
           from pathlib import Path
