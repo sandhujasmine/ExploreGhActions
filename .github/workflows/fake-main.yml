@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Test changed-files
     outputs:
-      product_dir: ${{ steps.from_added_files.outputs.product_dir }}
+      product_dir: ${{ steps.get_product_dir.outputs.product_dir }}
     steps:
       - uses: actions/checkout@v3
         id: checkout
@@ -34,24 +34,47 @@ jobs:
           dir_names: "true"
           files: ${{ env.SERVICES_BASE_DIR }}
       - name: Files changed
+        id: get_product_dir
         env:
           DIR_CHANGED: ${{ steps.changed-files-dir-names.outputs.all_changed_files }}
         run: |
-          echo "All files: ${DIR_CHANGED}"
+          import os
+          from pathlib import Path
 
-          for file in ${DIR_CHANGED}; do
-            echo "Customer directory: $file"
-          done
-      - name: Debug
-        env:
-          DIR_CHANGED: ${{ steps.changed-files-dir-names.outputs.all_changed_files }}
-        uses: mxschmitt/action-tmate@v3
-      - name: Print github context
-        id: github_ref
-        run: |
-          echo "github.ref: " ${{ github.ref }}
-          echo "github.base_ref: " ${{ github.base_ref }}
-          echo "github.event_name: " ${{ github.event_name }}
+          # space spearated list
+          svc_base = os.environ['SERVICES_BASE_DIR']
+          prod_dirs = os.environ['DIR_CHANGED'].split(' ')
+
+          # say we pull from main and get changes for products/Anaconda in addition to
+          # services/customer/zendesk# -- we should only build for services/customer/...
+          # In addition, first checkin coul have recipe and config.json:
+          #  ['products/services/svc-6/1234', 'products/services/svc-6/1234/recipe']
+          # Here the product_dir is products/services/svc-6 so let's filter and find it
+          prod_dir = Path(min(filter(lambda l: l.startswith(svc_base))))
+
+          # If change is in recipe folder, then let's keep the parent
+          prod_dir = prod_dir.parent if prod_dir.name == 'recipe' else prod_dir
+
+          if not (prod_dir / "config.json").exists():
+            # STOP: If we don't have config.json, we cannot proceed w/ this workflow
+            #   set product_dir to empty
+            msg = f"{prod_dir} does not contain config.json - don not set"
+            print(msg)
+            prod_dir = 'none'
+
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as fh:
+            print(f"product_dir={prod_dir}", file=fh)
+          
+      #- name: Debug
+      #  env:
+      #    DIR_CHANGED: ${{ steps.changed-files-dir-names.outputs.all_changed_files }}
+      #  uses: mxschmitt/action-tmate@v3
+      #- name: Print github context
+      #  id: github_ref
+      #  run: |
+      #    echo "github.ref: " ${{ github.ref }}
+      #    echo "github.base_ref: " ${{ github.base_ref }}
+      #    echo "github.event_name: " ${{ github.event_name }}
       #- name: Get product-dir from added files
       #  id: from_added_files
       #  run: |
@@ -73,11 +96,11 @@ jobs:
       #        break
       #      fi
       #    done
-  #check_skip:
-  #  name: Print skip var
-  #  runs-on: ubuntu-latest
-  #  needs: get_product_dir
-  #  steps:
-  #    - name: Check skip var
-  #      run: |
-  #        echo "PRODUCT_DIR = " ${{ needs.get_product_dir.outputs.product_dir }}
+  check_skip:
+    name: Print skip var
+    runs-on: ubuntu-latest
+    needs: get_product_dir
+    steps:
+      - name: Print product_dir
+        run: |
+          echo "PRODUCT_DIR = " ${{ needs.get_product_dir.outputs.product_dir }}
