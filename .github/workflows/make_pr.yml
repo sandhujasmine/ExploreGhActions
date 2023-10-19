@@ -33,7 +33,19 @@ permissions:
   pull-requests: write
 
 jobs:
+  test_env:
+    runs-on: ubuntu-latest
+    name: Create a PR
+    environment:
+      name: 'dev'
+    steps:
+      - name: Debug
+        env:
+          TEST_01: ${{ secrets.TEST_01 }}
+        uses: mxschmitt/action-tmate@v3
+
   open_pr:
+    if: false
     runs-on: ubuntu-latest
     name: Create a PR
     steps:
