@@ -38,15 +38,16 @@ jobs:
           echo
           echo "GITHUB_REF:$GITHUB_REF"
           echo "GITHUB_HEAD_REF:$GITHUB_HEAD_REF"
+          echo
+          echo "From github.ref:" ${{ github.ref}}
+          echo "From github.head_ref: ${{ github.head_ref }}
+          echo "From github.base_ref: ${{ github.base_ref }}
+          echo
           echo "GITHUB_SHA:$GITHUB_SHA"
           echo "GITHUB_WORKFLOW:$GITHUB_WORKFLOW"
           echo "GITHUB_EVENT_NAME:$GITHUB_EVENT_NAME"
           echo "GITHUB_EVENT_PATH:$GITHUB_EVENT_PATH"
           echo "GITHUB_WORKSPACE:$GITHUB_WORKSPACE"
-          echo
-          echo "From GITHUB_REF:" ${{ github.ref}}
-          echo "From GITHUB_HEAD_REF: ${{ github.head_ref }}
-          echo "From GITHUB_BASE_REF: ${{ github.base_ref }}
 
       - name: Print complete webhook event payload
         run: cat $GITHUB_EVENT_PATH

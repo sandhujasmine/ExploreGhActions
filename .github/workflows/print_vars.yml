@@ -24,12 +24,12 @@ jobs:
         fail-fast: false
         matrix:
           INSTALLER: [
-              {
-                "OS": "windows-latest",
-                "ARCH": "x86_64",
-                "EXT": "exe",
-                "OS_NAME": "Windows"
-              },
+              #{
+              #  "OS": "windows-latest",
+              #  "ARCH": "x86_64",
+              #  "EXT": "exe",
+              #  "OS_NAME": "Windows"
+              #},
               {
                 "OS": "ubuntu-latest",
                 "ARCH": "x86_64",
@@ -51,10 +51,9 @@ jobs:
           shell: python
 
     print_env_vars:
-      if: false
       name: Print env vars
       # Ensure if it runs, the ENVIRONMENT is 'dev'
       #if: github.event_name == 'push' || (startsWith( github.head_ref, 'services/') && github.event.pull_request.merged == true)
-      uses: ./.github/workflows/reusabel_ex.yml
+      uses: ./.github/workflows/reusable_ex.yml
       with:
         INSTALLER_NAME: "Test"
