@@ -30,7 +30,7 @@ jobs:
               #  "EXT": "exe",
               #  "OS_NAME": "Windows"
               #},
-              #{
+              {
                 "OS": "ubuntu-latest",
                 "ARCH": "x86_64",
                 "EXT": "sh",
