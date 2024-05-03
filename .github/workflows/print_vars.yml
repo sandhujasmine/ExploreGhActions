@@ -56,6 +56,6 @@ jobs:
       name: Print env vars
       # Ensure if it runs, the ENVIRONMENT is 'dev'
       #if: github.event_name == 'push' || (startsWith( github.head_ref, 'services/') && github.event.pull_request.merged == true)
-      uses: ./.github/workflows/svc-installer.yml
+      uses: ./.github/workflows/reusabel_ex.yml
       with:
         INSTALLER_NAME: "Test"
