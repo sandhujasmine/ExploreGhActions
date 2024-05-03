@@ -1,14 +1,13 @@
 name: Test workflow that sets env vars
 on:
   pull_request:
-    # when PR is merged into main, it is a push event; however,
-    # GITHUB_REF changes to refs/heads/main so we need GITHUB_HEAD_REF services/<name>
-    # Therefore, use this to run workflow after merge into main
-    types:
-      - closed
+    branches:
+      - main
   push:
     branches:
-      - 'services/**'
+      - main
+    tags:
+      - '*'
 
   workflow_dispatch:
 
