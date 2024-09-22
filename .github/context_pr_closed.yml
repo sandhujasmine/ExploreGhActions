@@ -24,9 +24,8 @@ jobs:
         echo "github.head_ref": ${{ github.head_ref}}
         echo "github.event.number": ${{ github.event.number }}
     - name: Print context vars on PR
-      if: github.event.pull_request.merged == true
       run: |
-        echo "ONLY ON MERGE TO MAIN"
+        echo "PR opened"
         echo "github.ref_name": ${{ github.ref_name }}
         echo "github.head_ref": ${{ github.head_ref}}
         echo "github.event.number": ${{ github.event.number }}
