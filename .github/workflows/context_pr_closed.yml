@@ -18,7 +18,7 @@ permissions:
   pull-requests: write
 
 env:
-  PR_HREF: 'https://github.com/sandhujasmine/ExploreGhActions/pull/'
+  PR_HREF: https://github.com/sandhujasmine/ExploreGhActions/pull/
 
 jobs:
   get_gha_context:
@@ -58,15 +58,17 @@ jobs:
     - name: Create Pull Request
       id: cpr
       uses: peter-evans/create-pull-request@70a41aba780001da0a30141984ae2a0c95d8704e # v6.0.2
+      env:
+        MERGED_PR: ${{ github.event.number }}
       with:
         # context is for creatinga  PR where base is main.
         #   github.head_ref - name of the branch that has been merged
         #   github.event.number - # of the PR that was just merged
         token: ${{ secrets.PR_PAT }}
         branch: pr-after-merge/${{ github.head_ref }}
-        title: Updates to sample-proj envspec (PR#${{ github.event.number }})
+        title: Updates to envspec from merging PR#${{ github.event.number }})
         body: |
-          - Created upon merge of: PR#${{ github.env.PR_HREF }}${{ github.event.number }}
+          - Created upon merge of: [PR#$MERGED_PR](${{ github.env.PR_HREF }}$MERGED_PR)
           - Automated changes by [create-pull-request](https://github.com/peter-evans/create-pull-request) GitHub action
         labels: |
           automation
