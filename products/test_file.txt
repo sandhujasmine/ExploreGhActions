@@ -1,1 +1,1 @@
-Trigger to run the updated workflow upon merge
+Trigger to run the updated workflow upon mergeAdded by PR# main
