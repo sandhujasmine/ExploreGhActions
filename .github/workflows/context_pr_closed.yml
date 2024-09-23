@@ -5,6 +5,9 @@ on:
       - 'products/**'
     branches:
       - 'main'
+  push:
+    tags:
+      - '*'
 
 jobs:
   get_gha_context:
