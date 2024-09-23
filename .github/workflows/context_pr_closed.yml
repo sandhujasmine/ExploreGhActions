@@ -17,6 +17,9 @@ permissions:
   contents: write
   pull-requests: write
 
+env:
+  PR_HREF: 'https://github.com/sandhujasmine/ExploreGhActions/pull/'
+
 jobs:
   get_gha_context:
     name: dump_gha_context
@@ -62,6 +65,9 @@ jobs:
         token: ${{ secrets.PR_PAT }}
         branch: pr-after-merge/${{ github.head_ref }}
         title: Updates to sample-proj envspec (PR#${{ github.event.number }})
+        body: |
+          - Created upon merge of: PR#${{ github.env.PR_HREF }}${{ github.event.number }}
+          - Automated changes by [create-pull-request](https://github.com/peter-evans/create-pull-request) GitHub action
         labels: |
           automation
           ${{ github.ref_name }}
