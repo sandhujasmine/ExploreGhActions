@@ -1,21 +1,21 @@
-name: Get GHA context on PR close
+name: Get GHA context
 on:
   pull_request:
-    types:
-      - closed
-      - opened
     paths:
-        # build envspecs if files are added/updated or a new tag is created
-        - 'products/**'
+      - 'products/**'
     branches:
-      # if sample-proj is updated; update the envspec and create a PR
-      - '**'
+      - 'main'
 
 jobs:
   get_gha_context:
-    name: update sampleproj envspecs & open PR if applicable
+    name: dump_gha_context
     runs-on: ubuntu-latest
     steps:
+    - name: Dump GitHub context
+      env:
+        GITHUB_CONTEXT: ${{ toJson(github) }}
+      run: |
+        echo "$GITHUB_CONTEXT"
     - name: Print context vars; merge to main
       if: github.event.pull_request.merged == true
       run: |
@@ -29,5 +29,5 @@ jobs:
         echo "github.ref_name": ${{ github.ref_name }}
         echo "github.head_ref": ${{ github.head_ref}}
         echo "github.event.number": ${{ github.event.number }}
-    - name: Debug
-      uses: mxschmitt/action-tmate@v3
+    #- name: Debug
+    #  uses: mxschmitt/action-tmate@v3
