@@ -1,13 +1,13 @@
 name: Test workflow that sets env vars
 on:
-  pull_request:
-    branches:
-      - main
-  push:
-    branches:
-      - main
-    tags:
-      - '*'
+  # pull_request:
+  #   branches:
+  #     - main
+  # push:
+  #   branches:
+  #     - main
+  #   tags:
+  #     - '*'
 
   workflow_dispatch:
 
