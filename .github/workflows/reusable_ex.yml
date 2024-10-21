@@ -75,9 +75,8 @@ jobs:
             HASH=$(git rev-parse --short "${GITHUB_SHA}")
             FOLDER=build/envs/$HASH
           fi
-          echo "FOLDER=${FOLDER}" >> $GITHUB_OUTPUT
           echo "GITHUB_REF: ${GITHUB_REF}""
-          echo "FOLDER: ${GITHUB_REF}""
+          echo "FOLDER: ${FOLDER}""
         shell: bash
 
       - name: Print complete webhook event payload
