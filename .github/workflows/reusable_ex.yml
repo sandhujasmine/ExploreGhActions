@@ -65,16 +65,19 @@ jobs:
         run: |
           if ${{ startsWith(github.ref, 'refs/tags') }}; then
             echo "$GITHUB_REF starts with refs/tags"
+            FOLDER=envs/${GITHUB_REF#refs/tags/}
           else
             echo "$GITHUB_REF does not start with refs/tags"
-          fi
-          echo "Try in bash only ... "
-          if [[ "$GITHUB_REF" =~ ^refs/tags ]]; then
-            FOLDER=envs/${{ github.ref_name }}
-          else
             HASH=$(git rev-parse --short "${GITHUB_SHA}")
             FOLDER=build/envs/$HASH
           fi
+          # echo "Try in bash only ... "
+          # if [[ "$GITHUB_REF" =~ ^refs/tags ]]; then
+          #   FOLDER=envs/${GITHUB_REF#refs/tags/}
+          # else
+          #   HASH=$(git rev-parse --short "${GITHUB_SHA}")
+          #   FOLDER=build/envs/$HASH
+          # fi
           echo "GITHUB_REF: ${GITHUB_REF}""
           echo "FOLDER: ${FOLDER}""
         shell: bash
