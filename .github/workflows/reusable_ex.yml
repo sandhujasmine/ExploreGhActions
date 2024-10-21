@@ -71,6 +71,7 @@ jobs:
             HASH=$(git rev-parse --short "${GITHUB_SHA}")
             FOLDER=build/envs/$HASH
           fi
+          echo $FOLDER
           # echo "Try in bash only ... "
           # if [[ "$GITHUB_REF" =~ ^refs/tags ]]; then
           #   FOLDER=envs/${GITHUB_REF#refs/tags/}
@@ -78,8 +79,8 @@ jobs:
           #   HASH=$(git rev-parse --short "${GITHUB_SHA}")
           #   FOLDER=build/envs/$HASH
           # fi
-          echo "GITHUB_REF: ${GITHUB_REF}""
-          echo "FOLDER: ${FOLDER}""
+          echo "GITHUB_REF: ${GITHUB_REF}"
+          echo "FOLDER: ${FOLDER}"
         shell: bash
 
       - name: Print complete webhook event payload
