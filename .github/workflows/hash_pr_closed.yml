@@ -50,7 +50,7 @@ jobs:
         # context is for creating a PR where base is main.
         #   github.head_ref - name of the branch that has been merged
         #   github.event.number - # of the PR that was just merged
-        token: ${{ secrets.ANACONDA_BOT_PRE_COMMIT }}
+        token: ${{ secrets.TEST_TOKEN }}
         branch: update-agent-api-wrapper/${{ github.head_ref }}
         title: Build spec update from PR#${{ github.event.number }}
         body: |
