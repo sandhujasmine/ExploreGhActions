@@ -31,7 +31,7 @@ jobs:
         )
         short_hash = result.stdout.strop()
         with open(GITHUB_OUTPUT, 'w') as fp:
-          fp.write(f"SHORT_HASH={short_hash}"")
+          fp.write(f"SHORT_HASH={short_hash}")
       shell: python
     - name: Debug
       env:
