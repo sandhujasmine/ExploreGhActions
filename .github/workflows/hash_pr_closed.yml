@@ -1,10 +1,10 @@
 name: Update conda recipe and build configuration
 on:
   pull_request:
-    #types:
-    #  - closed
-    #paths:
-    #    - 'path-trigger/**'
+    types:
+      - closed
+    paths:
+        - 'path-trigger/**'
     branches:
       - 'main'
 
@@ -55,7 +55,7 @@ jobs:
         VERS: ${{ steps.get_version.outputs.VERSION }}
         PR_URL: https://github.com/${{ github.event.repository }}/pull/${{ github.event.number }}
         PRNUM: PR#${{ github.event.number }}
-        # TOKEN: ${{ secrets.TEST_TOKEN }}
+        TOKEN: ${{ secrets.TEST_TOKEN }}
       uses: mxschmitt/action-tmate@v3
     #- name: Create PR with recipe updates
     #  if: false
