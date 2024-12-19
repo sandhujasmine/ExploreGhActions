@@ -8,6 +8,9 @@ on:
     branches:
       - 'main'
 
+# added for testing
+workflow_dispatch:
+
 jobs:
   build_config:
     if: github.event.pull_request.merged == true
