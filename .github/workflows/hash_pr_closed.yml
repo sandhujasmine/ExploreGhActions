@@ -3,15 +3,13 @@ on:
   pull_request:
     types:
       - closed
-    paths:
-        - 'path-trigger/**'
+    #paths:
+    #    - 'path-trigger/**'
     branches:
       - 'main'
 
 # added for testing
   workflow_dispatch:
-    paths:
-      - '**'
 
 jobs:
   build_config:
