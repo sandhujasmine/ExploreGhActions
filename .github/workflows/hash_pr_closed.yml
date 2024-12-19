@@ -11,6 +11,10 @@ on:
 # added for testing
   workflow_dispatch:
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   build_config:
     #if: github.event.pull_request.merged == true
