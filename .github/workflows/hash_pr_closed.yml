@@ -10,6 +10,8 @@ on:
 
 # added for testing
   workflow_dispatch:
+    paths:
+      - '**'
 
 jobs:
   build_config:
@@ -46,7 +48,13 @@ jobs:
       run: |
         echo "Update: $VERSION" >> path-trigger/foo
       shell: bash
+    - name: Debug
+      env:
+        VERS: ${{ steps.get_version.outputs.VERSION }}
+        TOKEN: ${{ secrets.TEST_TOKEN }}
+      uses: mxschmitt/action-tmate@v3
     - name: Create PR with recipe updates
+      if: false
       id: cpr
       uses: peter-evans/create-pull-request@v7
       with:
@@ -62,7 +70,3 @@ jobs:
         labels: |
           automation
           ${{ github.ref_name }}
-    #- name: Debug
-    #  env:
-    #    VERS: ${{ steps.get_version.outputs.VERSION }}
-    #  uses: mxschmitt/action-tmate@v3

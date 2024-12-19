@@ -15,8 +15,8 @@ env:
   VAR1: 'var1'
 
 jobs:
-    if: false
     print_vars:
+      if: false
       name: ${{ matrix.INSTALLER.OS_NAME }}-${{ matrix.INSTALLER.ARCH }}-${{ matrix.INSTALLER.EXT }}
       runs-on: ${{ matrix.INSTALLER.OS }}
       env:
@@ -52,6 +52,7 @@ jobs:
           shell: python
 
     print_env_vars:
+      if: false
       name: Print env vars
       # Ensure if it runs, the ENVIRONMENT is 'dev'
       #if: github.event_name == 'push' || (startsWith( github.head_ref, 'services/') && github.event.pull_request.merged == true)
