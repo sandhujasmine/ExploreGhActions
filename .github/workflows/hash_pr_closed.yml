@@ -29,7 +29,7 @@ jobs:
           text=True,
           check=True,
         )
-        short_hash = result.stdout.strop()
+        short_hash = result.stdout.strip()
         with open(GITHUB_OUTPUT, 'w') as fp:
           fp.write(f"SHORT_HASH={short_hash}")
       shell: python
