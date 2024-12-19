@@ -15,6 +15,7 @@ env:
   VAR1: 'var1'
 
 jobs:
+    if: false
     print_vars:
       name: ${{ matrix.INSTALLER.OS_NAME }}-${{ matrix.INSTALLER.ARCH }}-${{ matrix.INSTALLER.EXT }}
       runs-on: ${{ matrix.INSTALLER.OS }}
