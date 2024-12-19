@@ -1,0 +1,39 @@
+name: Update conda recipe and build configuration
+on:
+  pull_request:
+    types:
+      - closed
+    paths:
+        - 'path-trigger/**'
+    branches:
+      - 'main'
+
+jobs:
+  build_config:
+    if: github.event.pull_request.merged == true
+    name: Update build configuration
+    runs-on: ubuntu-latest
+    steps:
+    - name: Retrieve the source code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: get short git hash
+      id: get_version
+      run: |
+        import subprocess
+
+        result = subprocess.run(
+          ["git", "rev-parse", "--short", "HEAD"],
+          capture_output=True,
+          text=True,
+          check=True,
+        )
+        short_hash = result.stdout.strop()
+        with open(GITHUB_OUTPUT, 'w') as fp:
+          fp.write(f"SHORT_HASH={short_hash}"")
+      shell: python
+    - name: Debug
+      env:
+        VERS: ${{ steps.get_version.outputs.SHORT_HASH }}
+      uses: mxschmitt/action-tmate@v3
