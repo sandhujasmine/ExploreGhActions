@@ -22,7 +22,9 @@ jobs:
       id: get_version
       run: |
         import subprocess
+        import os
 
+        GITHUB_OUTPUT = os.getenv('GITHUB_OUTPUT')
         result = subprocess.run(
           ["git", "rev-parse", "--short", "HEAD"],
           capture_output=True,
