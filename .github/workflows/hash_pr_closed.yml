@@ -70,7 +70,7 @@ jobs:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         EVENT: ${{ github.event_name }}
       run: |
-        echo "event_name: " ${{ github.event_name}}
+        set -euxo pipefail
         BRANCH_PRE=bld-conf-agent-api-wrapper
         if [[ "$EVENT" == "workflow_dispatch" ]]; then
           BRANCH=$BRANCH_PRE/workflow_dispatch
@@ -80,8 +80,16 @@ jobs:
           PR=${{ github.event.number }}
           REPO=${{ github.event.repository }}
           BRANCH=$BRANCH_PRE/${{ github.head_ref}}
-          TITLE='"Build specs updates from PR: '${PR}'"'
-          BODY='"- Created after merging [PR#'${PR}'](https://github.com/'${REPO}'/pull/'${PR}')"'
+          TITLE=$(cat <<EOF
+          "Build specs updates from PR: ${PR}"
+          EOF
+          )
+          BODY=$(cat << EOF
+          "- Created after merging [PR#${PR}](https://github.com/${REPO}/pull/${PR})"
+          EOF
+          )
+          #TITLE='"Build specs updates from PR: '${PR}'"'
+          #BODY='"- Created after merging [PR#'${PR}'](https://github.com/'${REPO}'/pull/'${PR}')"'
         fi
         git config --global user.email "you@example.com"
         git config --global user.name "PR-bot"
