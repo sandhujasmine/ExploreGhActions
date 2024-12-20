@@ -75,28 +75,22 @@ jobs:
         set -euxo pipefail
         if [[ "$EVENT" == "workflow_dispatch" ]]; then
           BRANCH=$BRANCH_PRE/workflow_dispatch
-          TITLE='"Build specs updated manually"'
-          BODY='"- Created by manual trigger"'
+          TITLE="Build specs updated manually"
+          BODY="- Created by manual trigger"
         else
           PR=${{ github.event.number }}
-          REPO=${{ github.event.repository }}
-          BRANCH=$BRANCH_PRE/${{ github.head_ref}}
-          TITLE=$(cat <<EOF
-        "Build specs updates from PR: ${PR}"
-        EOF)
-          #BODY=$(cat << EOF
-          #"- Created after merging [PR#${PR}](https://github.com/${REPO}/pull/${PR})"
-          #EOF
-          #)
-          #TITLE='"Build specs updates from PR: '${PR}'"'
-          BODY='"- Created after merging [PR#'${PR}'](https://github.com/'${REPO}'/pull/'${PR}')"'
+          REPO=${{ github.repository }}
+          BRANCH=$BRANCH_PRE/${{ github.head_ref }}
+          TITLE="Build specs updates from PR: ${PR}"
+          BODY="- Created after merging [PR#${PR}](https://github.com/${REPO}/pull/${PR})"
         fi
+
         git config --global user.email "you@example.com"
         git config --global user.name "PR-bot"
         git checkout -b $BRANCH
         git commit -a -m "updated path-trigger/foo"
         git push -u origin $BRANCH
-        gh pr create -B main --title $TITLE --body $BODY
+        gh pr create -B main --title "$TITLE" --body "$BODY"
       shell: bash
     #  if: false
     #  id: cpr
