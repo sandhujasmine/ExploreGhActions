@@ -48,7 +48,7 @@ jobs:
         short_hash = result.stdout.strip()
         version = f"{datetime.today().strftime('%Y.%m.%d')}+{short_hash}"
         with open(GITHUB_OUTPUT, 'w') as fp:
-          fp.write(f"VERSION={version}")
+          fp.write(f"VERSION={version}\n")
           fp.write(f"SHORT_HASH={short_hash}")
       shell: python
     - name: Generate conda-recipe & pyproject with this version
