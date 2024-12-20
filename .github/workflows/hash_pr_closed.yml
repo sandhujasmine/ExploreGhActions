@@ -82,8 +82,8 @@ jobs:
           REPO=${{ github.event.repository }}
           BRANCH=$BRANCH_PRE/${{ github.head_ref}}
           TITLE=$(cat <<EOF
-          "Build specs updates from PR: ${PR}"
-          EOF)
+        "Build specs updates from PR: ${PR}"
+        EOF)
           #BODY=$(cat << EOF
           #"- Created after merging [PR#${PR}](https://github.com/${REPO}/pull/${PR})"
           #EOF
