@@ -8,8 +8,12 @@ on:
     branches:
       - 'main'
 
-# added for testing
-  workflow_dispatch:
+  workflow_dispatch:  # manual trigger for testing only
+    inputs:
+      debug:
+        description: 'ssh session to debug'
+        required: false
+        type: boolean
 
 permissions:
   contents: write
@@ -17,7 +21,9 @@ permissions:
 
 jobs:
   build_config:
-    #if: github.event.pull_request.merged == true
+    if: >
+      github.event.pull_request.merged == true ||
+      github.event_name == 'workflow_dispatch'
     name: Update build configuration
     runs-on: ubuntu-latest
     steps:
@@ -51,14 +57,35 @@ jobs:
         echo "Update: $VERSION" >> path-trigger/foo
       shell: bash
     - name: Debug
+      if: ${{ github.event.inputs.debug == 'true' }}
       env:
         VERS: ${{ steps.get_version.outputs.VERSION }}
         PR_URL: https://github.com/${{ github.repository }}/pull/${{ github.event.number }}
         PRNUM: PR#${{ github.event.number }}
-        TOKEN: ${{ secrets.TEST_TOKEN }}
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         GH_CONTEXT: ${{ toJson(github) }}
       uses: mxschmitt/action-tmate@v3
-    #- name: Create PR with recipe updates
+    - name: Create PR
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        EVENT: ${{ github.event_name }}
+      run: |
+        echo "event_name: " ${{ github.event_name}}
+        BRANCH_PRE=bld-conf-agent-api-wrapper
+        if [[ "$EVENT" == "workflow_dispatch" ]]; then
+          BRANCH=$BRANCH_PRE/workflow_dispatch
+          TITLE="Build specs updated manually"
+          BODY="- Created by manual trigger"
+        else
+          BRANCH=$BRANCH_PRE/${{ github.head_ref}}
+          TITLE="Build specs updates from PR: ${{ github.event.number }}"
+          BODY="- Created after merging [PR#${{ github.event.number }}](https://github.com/${{ github.event.repository }}/pull/${{ github.event.number }})"
+        fi
+        git checkout -b $BRANCH
+        git commit -a -m "updated path-trigger/foo"
+        git push -u origin $BRANCH
+        gh pr create -B main --title $TITLE --body $BODY
+      shell: bash
     #  if: false
     #  id: cpr
     #  uses: peter-evans/create-pull-request@v7
