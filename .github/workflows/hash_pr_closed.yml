@@ -53,9 +53,10 @@ jobs:
     - name: Debug
       env:
         VERS: ${{ steps.get_version.outputs.VERSION }}
-        PR_URL: https://github.com/${{ github.event.repository }}/pull/${{ github.event.number }}
+        PR_URL: https://github.com/${{ github.repository }}/pull/${{ github.event.number }}
         PRNUM: PR#${{ github.event.number }}
         TOKEN: ${{ secrets.TEST_TOKEN }}
+        GH_CONTEXT: ${{ toJson(github) }}
       uses: mxschmitt/action-tmate@v3
     #- name: Create PR with recipe updates
     #  if: false
