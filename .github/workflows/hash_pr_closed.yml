@@ -81,6 +81,8 @@ jobs:
           TITLE="Build specs updates from PR: ${{ github.event.number }}"
           BODY="- Created after merging [PR#${{ github.event.number }}](https://github.com/${{ github.event.repository }}/pull/${{ github.event.number }})"
         fi
+        git config --global user.email "you@example.com"
+        git config --global user.name "PR-bot"
         git checkout -b $BRANCH
         git commit -a -m "updated path-trigger/foo"
         git push -u origin $BRANCH
