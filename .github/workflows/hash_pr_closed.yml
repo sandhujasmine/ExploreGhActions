@@ -84,7 +84,7 @@ jobs:
           TITLE=$(cat <<EOF
           "Build specs updates from PR: ${PR}"
           EOF
-          #)
+          )
           #BODY=$(cat << EOF
           #"- Created after merging [PR#${PR}](https://github.com/${REPO}/pull/${PR})"
           #EOF
