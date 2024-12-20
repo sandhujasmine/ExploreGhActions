@@ -55,7 +55,7 @@ jobs:
       env:
         VERSION: ${{ steps.get_version.outputs.VERSION }}
       run: |
-        echo "Update: $VERSION" >> path-trigger/foo
+        echo "$VERSION" > version.txt
       shell: bash
     - name: Debug
       if: ${{ github.event.inputs.debug == 'true' }}
