@@ -80,16 +80,16 @@ jobs:
           PR=${{ github.event.number }}
           REPO=${{ github.event.repository }}
           BRANCH=$BRANCH_PRE/${{ github.head_ref}}
-          TITLE=$(cat <<EOF
-          "Build specs updates from PR: ${PR}"
-          EOF
-          )
-          BODY=$(cat << EOF
-          "- Created after merging [PR#${PR}](https://github.com/${REPO}/pull/${PR})"
-          EOF
-          )
-          #TITLE='"Build specs updates from PR: '${PR}'"'
-          #BODY='"- Created after merging [PR#'${PR}'](https://github.com/'${REPO}'/pull/'${PR}')"'
+          #TITLE=$(cat <<EOF
+          #"Build specs updates from PR: ${PR}"
+          #EOF
+          #)
+          #BODY=$(cat << EOF
+          #"- Created after merging [PR#${PR}](https://github.com/${REPO}/pull/${PR})"
+          #EOF
+          #)
+          TITLE='"Build specs updates from PR: '${PR}'"'
+          BODY='"- Created after merging [PR#'${PR}'](https://github.com/'${REPO}'/pull/'${PR}')"'
         fi
         git config --global user.email "you@example.com"
         git config --global user.name "PR-bot"
