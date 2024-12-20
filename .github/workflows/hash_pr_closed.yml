@@ -83,8 +83,7 @@ jobs:
           BRANCH=$BRANCH_PRE/${{ github.head_ref}}
           TITLE=$(cat <<EOF
           "Build specs updates from PR: ${PR}"
-          EOF
-          )
+          EOF)
           #BODY=$(cat << EOF
           #"- Created after merging [PR#${PR}](https://github.com/${REPO}/pull/${PR})"
           #EOF
