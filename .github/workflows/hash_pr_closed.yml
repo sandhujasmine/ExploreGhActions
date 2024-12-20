@@ -73,7 +73,6 @@ jobs:
         BRANCH_PRE: build-config-${{ steps.get_version.outputs.SHORT_HASH }}
       run: |
         set -euxo pipefail
-        git rev
         if [[ "$EVENT" == "workflow_dispatch" ]]; then
           BRANCH=$BRANCH_PRE/workflow_dispatch
           TITLE='"Build specs updated manually"'
