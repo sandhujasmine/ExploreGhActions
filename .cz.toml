@@ -1,0 +1,10 @@
+[tool.commitizen]
+name = "cz_conventional_commits"
+tag_format = "tag-prefix/$version"
+version_scheme = "semver"
+version = "0.0.1"
+update_changelog_on_bump = true
+major_version_zero = true   # only for development
+version_files = [
+    "products/__version__.py",
+]
