@@ -1,0 +1,17 @@
+package:
+  name: test
+  version: {{ GIT_DESCRIBE_TAG }}.{{ GIT_DESCRIBE_NUMBER }}
+
+source:
+  path: ../
+
+build:
+  number: 0
+  noarch: generic
+  script:
+    - echo "BUIDLING .. "
+
+requirements:
+  host: []
+  run: []
+  build: []
