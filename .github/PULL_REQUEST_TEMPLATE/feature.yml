@@ -1,0 +1,11 @@
+---
+name: "New Feature"
+about: "Added a feature"
+title: "feat: "
+---
+
+# [JIRA Ticket](LINK_TO_STORY)
+
+## Description
+
+### What does this PR do?
