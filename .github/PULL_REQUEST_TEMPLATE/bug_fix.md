@@ -1,11 +1,16 @@
----
-name: "Fixed bug"
-about: "Fixed a bug"
-title: "fix: "
----
+fix: <your-bug-fix-here>
 
-# [JIRA Ticket](LINK_TO_STORY)
+---
 
 ## Description
+<!-- Describe the bug and the fix -->
 
-### What does this PR do?
+## Steps to Reproduce
+1. ...
+2. ...
+3. ...
+
+## Checklist
+- [ ] Issue is fixed
+- [ ] Tests are added/updated
+- [ ] Labels (e.g., `bug`) are added

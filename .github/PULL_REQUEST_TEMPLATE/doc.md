@@ -1,11 +1,10 @@
----
-name: "Doc"
-about: "Doc change"
-title: "docs: "
----
+docs: <documentation-update-title>
 
-# [JIRA Ticket](LINK_TO_STORY)
+---
 
 ## Description
+<!-- Describe the changes in documentation -->
 
-### What does this PR do?
+## Checklist
+- [ ] Documentation is updated
+- [ ] No other code changes are required
