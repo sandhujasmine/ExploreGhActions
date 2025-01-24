@@ -4,8 +4,9 @@ version = "0.0.1"
 
 [tool.commitizen]
 name = "cz_conventional_commits"
-tag_format = "test/$current_version"  # this uses it from above
+tag_format = "test/$version"  # this uses it from above
 version_scheme = "semver"
+version = "0.0.1"
 version_files = [
     "test/__version__.py:version",
     "pyproject.toml:project.version",
