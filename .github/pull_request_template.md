@@ -1,6 +1,11 @@
-(scope): [JIRA-ticket#] <!-- short-description -->
+feat: [JIRA-ticket#] <!-- add-title-here -->
 <!-- 
-Scopes are as defined below:
+TITLE should be in following format, default scope is feat above:
+
+    scope: [JIRA-ticket-number] Concise PR title
+
+Scopes with definitions:
+
   fix:  a commit of the type fix patches a bug in your codebase
         (this correlates with PATCH in semantic versioning).
 
