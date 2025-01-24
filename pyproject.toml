@@ -1,0 +1,22 @@
+[project]
+name = "test"
+version = "0.0.1"
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+tag_format = "test/$current_version"  # this uses it from above
+version_scheme = "semver"
+version_files = [
+    "test/__version__.py:version",
+    "pyproject.toml:project.version",
+]
+update_changelog_on_bump = true
+major_version_zero = false
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.commitizen.changelog]
+incremental = false              # Ensure it processes all commits, not just the latest
+prepend = true                   # Prepend new changelog entries to the file
+changelog_file = "CHANGELOG.md"  # Specify the changelog file name

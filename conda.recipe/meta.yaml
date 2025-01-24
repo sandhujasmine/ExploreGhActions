@@ -1,9 +1,14 @@
+{% set pyproj = load_file_data('../pyproject.toml', from_recipe_dir=True) %}
+{% set project = pyproj.get('project') %}
+{% set name = project.get('name') %}
+{% set version = project.get('version') %}
+
 package:
-  name: test
-  version: {{ GIT_DESCRIBE_TAG }}.{{ GIT_DESCRIBE_NUMBER }}
+  name: {{ name|lower }}
+  version: {{ version }}
 
 source:
-  path: ../
+  path: ..  # Point to the root of the project
 
 build:
   number: 0
