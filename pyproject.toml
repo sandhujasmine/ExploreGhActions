@@ -8,7 +8,7 @@ tag_format = "test/$version"  # this uses it from above
 version_scheme = "semver"
 version = "0.0.1"
 version_files = [
-    "test/__version__.py",
+    "src/test/__version__.py",
     "pyproject.toml",
 ]
 update_changelog_on_bump = true
