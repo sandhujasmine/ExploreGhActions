@@ -26,7 +26,7 @@ jobs:
     if: >
       github.event.pull_request.merged == true ||
       github.event_name == 'workflow_dispatch'
-    name: Update build configuration
+    name: Bump dev version & build dev package
     runs-on: ubuntu-latest
     steps:
     - name: Retrieve the source code
@@ -38,7 +38,7 @@ jobs:
       run: |
         set -euxo pipefail
         echo "SHORT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-      shell: shell
+      shell: bash
     - name: Install Commitizen (Conda)
       run: |
         conda install -n base -c conda-forge commitizen 
