@@ -1,14 +1,14 @@
-name: Update conda recipe and build configuration
+name: Bump version & build dev package
 on:
   pull_request:
     types:
       - closed
     paths:
-        - 'path-trigger/**'
+        - 'src/test/**'
     branches:
       - 'main'
 
-  workflow_dispatch:  # manual trigger for testing only
+  workflow_dispatch:  # manual trigger mostly for testing
     inputs:
       debug:
         description: 'ssh session to debug'
@@ -21,6 +21,8 @@ permissions:
 
 jobs:
   build_config:
+    # bump version, build dev pkg & upload to dev
+    # either manually or by PR merge (looks for source code changes)
     if: >
       github.event.pull_request.merged == true ||
       github.event_name == 'workflow_dispatch'
@@ -31,31 +33,23 @@ jobs:
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
-    - name: get short git hash
+    - name: get short git hash; install commitizen
       id: get_version
       run: |
-        from datetime import datetime
-        import subprocess
-        import os
-
-        GITHUB_OUTPUT = os.getenv('GITHUB_OUTPUT')
-        result = subprocess.run(
-          ["git", "rev-parse", "--short", "HEAD"],
-          capture_output=True,
-          text=True,
-          check=True,
-        )
-        short_hash = result.stdout.strip()
-        version = f"{datetime.today().strftime('%Y.%m.%d')}+{short_hash}"
-        with open(GITHUB_OUTPUT, 'w') as fp:
-          fp.write(f"VERSION={version}\n")
-          fp.write(f"SHORT_HASH={short_hash}")
-      shell: python
-    - name: Generate conda-recipe & pyproject with this version
-      env:
-        VERSION: ${{ steps.get_version.outputs.VERSION }}
+        set -euxo pipefail
+        echo "SHORT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+      shell: shell
+    - name: Install Commitizen (Conda)
       run: |
-        echo "$VERSION" > version.txt
+        conda install -n base -c conda-forge commitizen 
+      shell: bash
+    - name: Bump dev version
+      env:
+        VERSION: ${{ steps.get_version.outputs.SHORT_HASH }}
+      run: |
+        set -euxo pipefail
+        echo "bump dev version"
+        cz bump $(cz bump --get-next)+${VERSION}
       shell: bash
     - name: Debug
       if: ${{ github.event.inputs.debug == 'true' }}
@@ -70,28 +64,36 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         EVENT: ${{ github.event_name }}
-        BRANCH_PRE: build-config-${{ steps.get_version.outputs.SHORT_HASH }}
+        BRANCH_PRE: test-dev-build-${{ steps.get_version.outputs.SHORT_HASH }}
       run: |
         set -euxo pipefail
         if [[ "$EVENT" == "workflow_dispatch" ]]; then
           BRANCH=$BRANCH_PRE/workflow_dispatch
-          TITLE="Build specs updated manually"
+          TITLE="Dev vers bump: triggered manually"
           BODY="- Created by manual trigger"
         else
           PR=${{ github.event.number }}
           REPO=${{ github.repository }}
           BRANCH=$BRANCH_PRE/${{ github.head_ref }}
-          TITLE="Build specs updates from PR: ${PR}"
+          TITLE="Dev vers bump: triggered by updates from PR: ${PR}"
           BODY="- Created after merging [PR#${PR}](https://github.com/${REPO}/pull/${PR})"
         fi
 
         git config --global user.email "you@example.com"
         git config --global user.name "PR-bot"
         git checkout -b $BRANCH
-        git commit -a -m "updated path-trigger/foo"
+
+        echo "bump dev version (do not push tag)"
+        cz bump --yes $(cz bump --get-next)+${VERSION}
+
         git push -u origin $BRANCH
         gh pr create -B main --title "$TITLE" --body "$BODY"
       shell: bash
+    - name: build package & upload
+      run: |
+        conda build conda.recipe
+      shell: bash
+
     #  if: false
     #  id: cpr
     #  uses: peter-evans/create-pull-request@v7
