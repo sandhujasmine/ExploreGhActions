@@ -49,7 +49,7 @@ jobs:
     - name: Debug
       if: ${{ github.event.inputs.debug == 'true' }}
       env:
-        VERS: ${{ steps.get_version.outputs.VERSION }}
+        VERSION: ${{ steps.get_version.outputs.VERSION }}
         PR_URL: https://github.com/${{ github.repository }}/pull/${{ github.event.number }}
         PRNUM: PR#${{ github.event.number }}
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -60,6 +60,7 @@ jobs:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         EVENT: ${{ github.event_name }}
         BRANCH_PRE: test-dev-build-${{ steps.get_version.outputs.SHORT_HASH }}
+        VERSION: ${{ steps.get_version.outputs.VERSION }}
       run: |
         set -euxo pipefail
         if [[ "$EVENT" == "workflow_dispatch" ]]; then
