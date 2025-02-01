@@ -1,0 +1,31 @@
+name: Experiment with conda
+on:
+  workflow_dispatch:  # manual trigger mostly for testing
+    inputs:
+      debug:
+        description: 'ssh session to debug'
+        required: false
+        default: true
+        type: boolean
+
+jobs:
+  build_config:
+    # bump version, build dev pkg & upload to dev
+    # either manually or by PR merge (looks for source code changes)
+    name: Install conda & experiment
+    runs-on: ubuntu-latest
+    steps:
+    - uses: conda-incubator/setup-miniconda@v3
+      with:
+        auto-update-conda: true
+    - name: Conda info
+      shell: bash -el {0}
+      run: conda info
+    - name: Retrieve the source code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: Debug
+      if: ${{ github.event.inputs.debug == 'true' }}
+      uses: mxschmitt/action-tmate@v3
+ 
