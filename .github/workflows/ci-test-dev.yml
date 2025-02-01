@@ -37,12 +37,9 @@ jobs:
       id: get_version
       run: |
         set -euxo pipefail
+        # simpler to use pip - couldn't figure out how to use conda env
+        pip install commitizen
         echo "SHORT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-      shell: bash
-    - name: Install Commitizen (pip)
-      run: |
-        # simpler to install w/ pip - couldn't figure out how to use conda env
-        pip install conda-forge
       shell: bash
     - name: Debug
       if: ${{ github.event.inputs.debug == 'true' }}
