@@ -41,15 +41,7 @@ jobs:
       shell: bash
     - name: Install Commitizen (Conda)
       run: |
-        conda install -n base -c conda-forge commitizen 
-      shell: bash
-    - name: Bump dev version
-      env:
-        VERSION: ${{ steps.get_version.outputs.SHORT_HASH }}
-      run: |
-        set -euxo pipefail
-        echo "bump dev version"
-        cz bump $(cz bump --get-next)+${VERSION}
+        conda install -c conda-forge commitizen
       shell: bash
     - name: Debug
       if: ${{ github.event.inputs.debug == 'true' }}
@@ -60,6 +52,15 @@ jobs:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         GH_CONTEXT: ${{ toJson(github) }}
       uses: mxschmitt/action-tmate@v3
+    - name: Bump dev version
+      env:
+        VERSION: ${{ steps.get_version.outputs.SHORT_HASH }}
+      run: |
+        set -euxo pipefail
+        echo "bump dev version"
+        cz bump $(cz bump --get-next)+${VERSION}
+      shell: bash
+
     - name: Create PR
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
