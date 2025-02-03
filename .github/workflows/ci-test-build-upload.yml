@@ -1,9 +1,12 @@
-name: build dev package
+name: Build dev package
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
-    paths:
-      - 'pyproject.toml'
+    types:
+      - opened
+      - synchronize
+      - reopened
+    #paths:
+    #  - 'pyproject.toml'
     branches:
       - 'main'
 
