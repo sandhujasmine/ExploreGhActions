@@ -28,6 +28,7 @@ jobs:
       github.event_name == 'workflow_dispatch'
     name: Bump dev version & build dev package
     runs-on: ubuntu-latest
+    environment: dev
     steps:
     - name: Retrieve the source code
       uses: actions/checkout@v4
