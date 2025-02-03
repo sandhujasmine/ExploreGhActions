@@ -90,6 +90,13 @@ jobs:
         conda install -y conda-build
         conda build conda.recipe/
       shell: bash
+    - name: 'Upload Artifact'
+      uses: actions/upload-artifact@v4
+      env:
+        BUILD_PREFIX: /usr/share/miniconda/conda-bld
+      with:
+        name: test
+        path: $BUILD_PREFIX/**/test*.conda
 
     #  if: false
     #  id: cpr
