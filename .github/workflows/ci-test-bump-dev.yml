@@ -84,11 +84,13 @@ jobs:
         git push -u origin $BRANCH
         gh pr create -B main --title "$TITLE" --body "$BODY"
       shell: bash
-#    - name: build package & upload
-#      run: |
-#        conda build conda.recipe
-#      shell: bash
-#
+    - name: build package & upload
+      run: |
+        echo "current branch: $(git rev-parse --abbrev-ref HEAD)"
+        conda install -y conda-build
+        conda build conda.recipe/
+      shell: bash
+
     #  if: false
     #  id: cpr
     #  uses: peter-evans/create-pull-request@v7
