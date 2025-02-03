@@ -99,7 +99,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: test
-        path: ${{ steps.build.ouputs.CONDA_PACKAGE }}
+        path: ${{ env.CONDA_PACKAGE }}
         retention-days: 7
 
     #  if: false
