@@ -90,6 +90,7 @@ jobs:
         conda install -y conda-build
         conda build conda.recipe/
         CONDA_FILE=$(find /usr/share/miniconda/conda-bld -type f -name "test*.conda")
+        echo "mv ${CONDA_FILE} to /tmp/"
         mv ${CONDA_FILE} /tmp/
       shell: bash
     - name: Debug
