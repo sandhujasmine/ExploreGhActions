@@ -89,8 +89,10 @@ jobs:
       run: |
         echo "current branch: $(git rev-parse --abbrev-ref HEAD)"
         conda install -y conda-build
-        CONDA_OUTPUT=$(conda build --output conda.recipe)
-        echo "CONDA_PACKAGE=$CONDA_OUTPUT" >> $GITHUB_ENV
+        # couldn't get a build when using --output
+        conda build conda.recipe/
+        CONDA_FILE=$(find ${CONDA}/conda-bld -type f -name "test*.conda")
+        echo "CONDA_PACKAGE=$CONDA_FILE" >> $GITHUB_ENV
       shell: bash
     - name: Debug
       if: ${{ github.event.inputs.debug == 'true' }}
