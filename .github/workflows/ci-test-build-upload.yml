@@ -1,0 +1,35 @@
+name: Bump version & build dev package
+on:
+  pull_request:
+    paths:
+      - 'pyproject.toml'
+    branches:
+      - 'main'
+
+  workflow_dispatch:  # manual trigger mostly for testing
+    inputs:
+      debug:
+        description: 'ssh session to debug'
+        required: false
+        type: boolean
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  build_config:
+    name: Bump dev version & build dev package
+    runs-on: ubuntu-latest
+    steps:
+    - name: Retrieve the source code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: Debug
+      if: ${{ github.event.inputs.debug == 'true' }}
+      uses: mxschmitt/action-tmate@v3
+    - name: build package & upload
+      run: |
+        conda build conda.recipe
+      shell: bash
