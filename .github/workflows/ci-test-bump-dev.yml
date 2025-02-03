@@ -89,17 +89,18 @@ jobs:
         echo "current branch: $(git rev-parse --abbrev-ref HEAD)"
         conda install -y conda-build
         conda build conda.recipe/
+        CONDA_FILE=$(find /usr/share/miniconda/conda-bld -type f -name "test*.conda")
+        mv ${CONDA_FILE} /tmp/
       shell: bash
     - name: Debug
       if: ${{ github.event.inputs.debug == 'true' }}
       uses: mxschmitt/action-tmate@v3
     - name: 'Download Artifact'
       uses: actions/download-artifact@v4
-      env:
-        BUILD_PREFIX: /usr/share/miniconda/conda-bld
       with:
         name: test
-        path: $BUILD_PREFIX/**/test*.conda
+        path: /tmp
+        pattern: test*.conda
 
     #  if: false
     #  id: cpr
