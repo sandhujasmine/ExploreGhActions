@@ -94,6 +94,22 @@ jobs:
         CONDA_FILE=$(find ${CONDA}/conda-bld -type f -name "test*.conda")
         echo "CONDA_PACKAGE=$CONDA_FILE" >> $GITHUB_ENV
       shell: bash
+    - name: Upload package
+      env:
+        PSM: anacondaconnect
+        PSM_URL: https://pkgs.as.anacondaconnect.com
+        TOKEN: ${{ secrets.PSM_TEST_UPLOAD_TOKEN }}
+      run: |
+        set -euxo pipefail
+        conda install conda-repo-cli
+        conda repo config --set sites.${PSM}.url ${PSM_URL}/api
+        ## following fails since it needs cf headers; commented here.
+        #conda repo --verbose --token ${TOKEN} \
+        #--site ${PSM} \
+        #upload \
+        #--channel ai-aug/dev \
+        #${{ env.CONDA_PACKAGE }}
+      shell: bash
     - name: Debug
       if: ${{ github.event.inputs.debug == 'true' }}
       uses: mxschmitt/action-tmate@v3
