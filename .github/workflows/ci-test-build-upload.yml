@@ -1,6 +1,7 @@
 name: build dev package
 on:
   pull_request:
+    types: [opened, synchronize, reopened]
     paths:
       - 'pyproject.toml'
     branches:
@@ -31,5 +32,6 @@ jobs:
       uses: mxschmitt/action-tmate@v3
     - name: build package & upload
       run: |
+        conda build -y conda-build
         conda build conda.recipe
       shell: bash
