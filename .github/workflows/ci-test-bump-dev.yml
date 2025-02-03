@@ -101,6 +101,7 @@ jobs:
         TOKEN: ${{ secrets.PSM_TEST_UPLOAD_TOKEN }}
       run: |
         set -euxo pipefail
+        export CONDA_PREFIX=${CONDA}
         conda install conda-repo-cli
         conda repo config --set sites.${PSM}.url ${PSM_URL}/api
         ## following fails since it needs cf headers; commented here.
