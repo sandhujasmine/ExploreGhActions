@@ -63,15 +63,16 @@ jobs:
         VERSION: ${{ steps.get_version.outputs.SHORT_HASH}}
       run: |
         set -euxo pipefail
+        PRE_TITLE="[${VERSION}]Dev vers bump:"
         if [[ "$EVENT" == "workflow_dispatch" ]]; then
           BRANCH=$BRANCH_PRE/workflow_dispatch
-          TITLE="Dev vers bump: triggered manually"
+          TITLE="${PRE_TITLE} triggered manually"
           BODY="- Created by manual trigger"
         else
           PR=${{ github.event.number }}
           REPO=${{ github.repository }}
           BRANCH=$BRANCH_PRE/${{ github.head_ref }}
-          TITLE="Dev vers bump: triggered by updates from PR: ${PR}"
+          TITLE="[${PRE_TITLE}] triggered by updates from PR: ${PR}"
           BODY="- Created after merging [PR#${PR}](https://github.com/${REPO}/pull/${PR})"
         fi
 
