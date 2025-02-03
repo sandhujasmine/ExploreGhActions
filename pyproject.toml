@@ -1,12 +1,12 @@
 [project]
 name = "test"
-version = "0.0.0"
+version = "1.0.0+685a7a8"
 
 [tool.commitizen]
 name = "cz_conventional_commits"
 tag_format = "test/$version"  # this uses it from above
 version_scheme = "semver"
-version = "0.0.0"
+version = "1.0.0+685a7a8"
 version_files = [
     "src/test/__version__.py",
     "pyproject.toml",
