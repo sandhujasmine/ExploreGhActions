@@ -46,15 +46,15 @@ jobs:
         set -euxo pipefail
         echo "SHORT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
       shell: bash
-    - name: Debug
-      if: ${{ github.event.inputs.debug == 'true' }}
-      env:
-        VERSION: ${{ steps.get_version.outputs.SHORT_HASH }}
-        PR_URL: https://github.com/${{ github.repository }}/pull/${{ github.event.number }}
-        PRNUM: PR#${{ github.event.number }}
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        GH_CONTEXT: ${{ toJson(github) }}
-      uses: mxschmitt/action-tmate@v3
+#    - name: Debug
+#      if: ${{ github.event.inputs.debug == 'true' }}
+#      env:
+#        VERSION: ${{ steps.get_version.outputs.SHORT_HASH }}
+#        PR_URL: https://github.com/${{ github.repository }}/pull/${{ github.event.number }}
+#        PRNUM: PR#${{ github.event.number }}
+#        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        GH_CONTEXT: ${{ toJson(github) }}
+#      uses: mxschmitt/action-tmate@v3
     - name: Create PR
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -90,8 +90,11 @@ jobs:
         conda install -y conda-build
         conda build conda.recipe/
       shell: bash
-    - name: 'Upload Artifact'
-      uses: actions/upload-artifact@v4
+    - name: Debug
+      if: ${{ github.event.inputs.debug == 'true' }}
+      uses: mxschmitt/action-tmate@v3
+    - name: 'Download Artifact'
+      uses: actions/download-artifact@v4
       env:
         BUILD_PREFIX: /usr/share/miniconda/conda-bld
       with:
