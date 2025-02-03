@@ -112,6 +112,10 @@ jobs:
         #${{ env.CONDA_PACKAGE }}
       shell: bash
     - name: Debug
+      env:
+        PSM: anacondaconnect
+        PSM_URL: https://pkgs.as.anacondaconnect.com
+        TOKEN: ${{ secrets.PSM_TEST_UPLOAD_TOKEN }}
       if: ${{ github.event.inputs.debug == 'true' }}
       uses: mxschmitt/action-tmate@v3
     - name: 'Upload Artifact'
