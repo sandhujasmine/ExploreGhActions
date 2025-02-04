@@ -10,6 +10,11 @@ on:
 
   workflow_dispatch:  # manual trigger mostly for testing
     inputs:
+      open_pr:
+        description: 'Open PR on branch with version bump'
+        required: false
+        default: false
+        type: boolean
       debug:
         description: 'ssh session to debug'
         required: false
@@ -82,8 +87,11 @@ jobs:
         echo "bump dev version (do not push tag)"
         cz bump --yes $(cz bump --yes --get-next)+${VERSION}
 
-        git push -u origin $BRANCH
-        gh pr create -B main --title "$TITLE" --body "$BODY"
+        if ${{ github.event.inputs.open_pr == 'true' }}; then
+          echo "Open a PR for ${BRANCH}"
+          git push -u origin $BRANCH
+          gh pr create -B main --title "$TITLE" --body "$BODY"
+        fi
       shell: bash
     - name: build package
       id: build
