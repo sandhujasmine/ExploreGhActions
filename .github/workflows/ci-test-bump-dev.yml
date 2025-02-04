@@ -1,4 +1,4 @@
-name: Bump version & create PR
+name: Bump version, build pkg, (optional) create PR
 on:
   pull_request:
     types:
