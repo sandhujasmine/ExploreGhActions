@@ -30,11 +30,49 @@ jobs:
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
+
+    - name: Get changed files
+      id: changed_files
+      uses: tj-actions/changed-files@4edd678ac3f81e2dc578756871e4d00c19191daf # v45.0.4
+      with:
+        files: '**/src/**'
+  
+    - name: Get PACKAGE_NAME for changes to PACKAGE/src/**
+      id: package_to_build
+      run: |
+        import os
+        import re
+        from pathlib import Path
+  
+        changed_files = """${{ steps.changed_files.outputs.all_changed_files }}""".split()
+        src_dirs = set()
+  
+        for file in changed_files:
+            match = re.search(r"^(.*?/src)/", file)
+            if match:
+                src_dir = Path(match.group(1)).resolve()
+                parent_dir = src_dir.parent
+                src_dirs.add(str(parent_dir))
+  
+        # expect to find at least 1 package; but if more than 1, then raise error
+        # if more than 1 packages, then there is a dependency between so building becomes more
+        # challenging; let's not handle this till we have a clean way to do it. For now,
+        # PR should only result in changes to 1 package
+        if len(src_dirs) > 1:
+          raise ValueError("expect changes to only 1 package per PR; ERRORING OUT..")
+  
+        GITHUB_OUTPUT = os.getenv('GITHUB_OUTPUT')
+        with open(GITHUB_OUTPUT, 'w') as fp:
+          fp.write(f'APP_DIR={src_dirs.pop()}')
+      shell: python
+
     - name: Debug
+      env:
+        APP_DIR: ${{ steps.package_to_build.outputs.APP_DIR }}
       if: ${{ github.event.inputs.debug == 'true' }}
       uses: mxschmitt/action-tmate@v3
-    - name: build package & upload
-      run: |
-        conda build -y conda-build
-        conda build conda.recipe
-      shell: bash
+    #- name: build package & upload
+    #  run: |
+    #    conda build -y conda-build
+    #    conda build conda.recipe
+    #  shell: bash
