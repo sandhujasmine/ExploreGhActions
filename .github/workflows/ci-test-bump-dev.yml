@@ -26,6 +26,7 @@ permissions:
 
 jobs:
   build_config:
+    if: false  # moved things around so do not run this job
     # bump version, build dev pkg & upload to dev
     # either manually or by PR merge (looks for source code changes)
     if: >
