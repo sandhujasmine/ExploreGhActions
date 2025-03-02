@@ -64,13 +64,18 @@ jobs:
           fp.write(f'APP_DIR={src_dirs.pop()}')
       shell: python
 
+    - name: build package & upload
+      env:
+        APP_DIR: ${{ steps.package_to_build.outputs.APP_DIR }}
+      run: |
+        echo "APP_DIR: ${APP_DIR}"
+        cd ${APP_DIR}
+        conda build -y conda-build
+        conda build conda.recipe
+      shell: bash
+
     - name: Debug
       env:
         APP_DIR: ${{ steps.package_to_build.outputs.APP_DIR }}
-      if: ${{ github.event.inputs.debug == 'true' }}
+      if: ${{ github.event.inputs.debug == 'true' || failure() }}
       uses: mxschmitt/action-tmate@v3
-    #- name: build package & upload
-    #  run: |
-    #    conda build -y conda-build
-    #    conda build conda.recipe
-    #  shell: bash
