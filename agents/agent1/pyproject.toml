@@ -1,0 +1,23 @@
+[project]
+name = "agent1"
+version = "0.0.0"
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+tag_format = "agent1/$version"  # this uses it from above
+version_scheme = "semver"
+version = "0.0.0"
+version_files = [
+    "src/agent1/__version__.py",
+    "pyproject.toml",
+]
+update_changelog_on_bump = false  # explicitly update changelog
+major_version_zero = false
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.commitizen.changelog]
+incremental = false              # Ensure it processes all commits, not just the latest
+prepend = true                   # Prepend new changelog entries to the file
+changelog_file = "CHANGELOG.md"  # Specify the changelog file name

@@ -1,0 +1,22 @@
+{% set pyproj = load_file_data('../pyproject.toml', from_recipe_dir=True) %}
+{% set project = pyproj.get('project') %}
+{% set name = project.get('name') %}
+{% set version = project.get('version') %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  path: ..  # Point to the root of the project
+
+build:
+  number: 0
+  noarch: generic
+  script:
+    - echo "BUIDLING .. "
+
+requirements:
+  host: []
+  run: []
+  build: []
