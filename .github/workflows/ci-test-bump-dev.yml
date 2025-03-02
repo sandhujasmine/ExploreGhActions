@@ -29,9 +29,9 @@ jobs:
     if: false  # moved things around so do not run this job
     # bump version, build dev pkg & upload to dev
     # either manually or by PR merge (looks for source code changes)
-    if: >
-      github.event.pull_request.merged == true ||
-      github.event_name == 'workflow_dispatch'
+    #if: >
+    #  github.event.pull_request.merged == true ||
+    #  github.event_name == 'workflow_dispatch'
     name: Bump dev version & build dev package
     runs-on: ubuntu-latest
     environment: dev
