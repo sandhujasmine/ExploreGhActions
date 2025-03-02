@@ -1,12 +1,10 @@
-name: Build dev package
+name: Test changed files (package to build)
 on:
   pull_request:
     types:
-      - opened
-      - synchronize
-      - reopened
-    #paths:
-    #  - 'pyproject.toml'
+      - closed
+    paths:
+        - '**/src/**'
     branches:
       - 'main'
 
