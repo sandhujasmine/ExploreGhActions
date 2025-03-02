@@ -68,6 +68,7 @@ jobs:
       env:
         APP_DIR: ${{ steps.package_to_build.outputs.APP_DIR }}
       run: |
+        conda install -y conda-build
         echo "APP_DIR: ${APP_DIR}"
         cd ${APP_DIR}
         conda build -y conda-build
