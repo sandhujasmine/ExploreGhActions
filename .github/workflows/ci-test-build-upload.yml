@@ -23,6 +23,9 @@ jobs:
   build_config:
     name: Bump dev version & build dev package
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -el {0}
     steps:
     - name: Retrieve the source code
       uses: actions/checkout@v4
@@ -51,7 +54,7 @@ jobs:
                 src_dir = Path(match.group(1)).resolve()
                 parent_dir = src_dir.parent
                 src_dirs.add(str(parent_dir))
-  
+
         # expect to find at least 1 package; but if more than 1, then raise error
         # if more than 1 packages, then there is a dependency between so building becomes more
         # challenging; let's not handle this till we have a clean way to do it. For now,
@@ -64,14 +67,23 @@ jobs:
           fp.write(f'APP_DIR={src_dirs.pop()}')
       shell: python
 
+    - uses: conda-incubator/setup-miniconda@v3
+      with:
+        miniconda-version: "latest"
+        activate-environment: ""    # not creating a build env at present
+        channels: conda-forge,main  # hard code channels for now
+
     - name: build package & upload
       env:
         APP_DIR: ${{ steps.package_to_build.outputs.APP_DIR }}
       run: |
-        conda install -y conda-build
         echo "APP_DIR: ${APP_DIR}"
+
+        echo "::group::install conda-build, build"
+        conda install -y conda-build
         cd ${APP_DIR}
         conda build conda.recipe
+        echo "::endgroup::"
       shell: bash
 
     - name: Debug
