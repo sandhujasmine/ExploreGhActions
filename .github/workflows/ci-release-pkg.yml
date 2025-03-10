@@ -58,6 +58,7 @@ jobs:
         BODY="- Created by manual trigger; branched at ${PARENT_HASH}"
 
         git checkout -b $BRANCH
+        cd ${{ github.event.inputs.package }}
         echo "Bump version in branch and create PR"
         cz bump --yes -ch
 
