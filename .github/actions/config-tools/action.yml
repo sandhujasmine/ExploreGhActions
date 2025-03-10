@@ -4,9 +4,6 @@ name: "Configure tools - miniconda, cz, github"
 description: "configure tools like cz"
 runs:
   using: "composite"
-  defaults:
-    run:
-      shell: bash -el {0}
   steps:
     - uses: conda-incubator/setup-miniconda@v3
       with:
@@ -31,3 +28,4 @@ runs:
 
         echo "CONDA_PREFIX - ${CONDA_PREFIX}"
         cz version
+      shell: bash -el {0}
