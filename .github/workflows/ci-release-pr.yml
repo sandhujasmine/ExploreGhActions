@@ -43,20 +43,13 @@ jobs:
         echo "SHORT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
         PKG_NAME=${PKG_PATH##*/}
         echo "PKG_NAME=$PKG_NAME" >> $GITHUB_OUTPUT
-      shell: bash
-    - name: activate base (see if it persists)
+    - name: bump version
       run: |
+        set -euxo pipefail
         echo "::group::activate base"
         source "$CONDA/etc/profile.d/conda.sh"
         conda activate base
         echo "::endgroup::"
-    - name: bump version
-      run: |
-        set -euxo pipefail
-        # echo "::group::activate base"
-        # source "$CONDA/etc/profile.d/conda.sh"
-        # conda activate base
-        # echo "::endgroup::"
         cd ${{ github.event.inputs.package }}
         echo "Bump version, make commit as a chore, then open PR"
         MSG="chore(release): updated files for bump"
@@ -84,6 +77,7 @@ jobs:
         labels: |
           automation
           release
+        shell: bash
     - name: Debug
       if: ${{ github.event.inputs.debug == 'true' || failure()  }}
       uses: mxschmitt/action-tmate@v3
