@@ -25,6 +25,9 @@ jobs:
     name: Bump release version
     runs-on: ubuntu-latest
     environment: dev
+    defaults:
+      run:
+        shell: bash -el {0}
     steps:
     - name: Retrieve the source code
       uses: actions/checkout@v4
@@ -43,6 +46,12 @@ jobs:
         PKG_NAME=${PKG_PATH##*/}
         echo "PKG_NAME=$PKG_NAME" >> $GITHUB_OUTPUT
       shell: bash
+    #- name: activate base (see if it persists)
+    #  run: |
+    #    echo "::group::activate base"
+    #    source "$CONDA/etc/profile.d/conda.sh"
+    #    conda activate base
+    #    echo "::endgroup::"
     - name: bump version
       run: |
         set -euxo pipefail
@@ -62,7 +71,6 @@ jobs:
         echo "BRANCH=release/${{ steps.get_version.outputs.PKG_NAME }}-${{ steps.get_version.outputs.SHORT_HASH }}" >> $GITHUB_ENV
         echo "TITLE=$MSG - ${{ steps.get_version.outputs.PKG_NAME }}-${{ steps.get_version.outputs.SHORT_HASH }}" >> $GITHUB_ENV
         echo "BODY_L1=PR to bump version & release ${{ steps.get_version.outputs.PKG_NAME }} from hash ${{ steps.get_version.outputs.SHORT_HASH }}" >> $GITHUB_ENV
-      shell: bash
     - name: test cpr
       id: cpr
       uses: peter-evans/create-pull-request@v7
