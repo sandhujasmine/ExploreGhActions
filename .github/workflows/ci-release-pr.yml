@@ -1,6 +1,6 @@
 #
 #
-name: Bump version, build release package, create PR
+name: Update files for version bump, create PR
 on:
   workflow_dispatch:
     inputs:
