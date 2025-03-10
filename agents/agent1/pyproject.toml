@@ -1,12 +1,12 @@
 [project]
 name = "agent1"
-version = "0.0.0"
+version = "1.0.0"
 
 [tool.commitizen]
 name = "cz_conventional_commits"
 tag_format = "agent1/$version"  # this uses it from above
 version_scheme = "semver"
-version = "0.0.0"
+version = "1.0.0"
 version_files = [
     "src/agent1/__version__.py",
     "pyproject.toml",
