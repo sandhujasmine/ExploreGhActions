@@ -26,3 +26,4 @@ runs:
 
         echo "CONDA_PREFIX - ${CONDA_PREFIX}"
         cz version
+      shell: bash
