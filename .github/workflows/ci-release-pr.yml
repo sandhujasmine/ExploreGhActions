@@ -34,8 +34,6 @@ jobs:
       with:
         fetch-depth: 0
     - uses: ./.github/actions/config-tools
-      with:
-        auto-activate-base: true
     - name: get short git hash
       id: get_version
       env:
@@ -46,12 +44,12 @@ jobs:
         PKG_NAME=${PKG_PATH##*/}
         echo "PKG_NAME=$PKG_NAME" >> $GITHUB_OUTPUT
       shell: bash
-    #- name: activate base (see if it persists)
-    #  run: |
-    #    echo "::group::activate base"
-    #    source "$CONDA/etc/profile.d/conda.sh"
-    #    conda activate base
-    #    echo "::endgroup::"
+    - name: activate base (see if it persists)
+      run: |
+        echo "::group::activate base"
+        source "$CONDA/etc/profile.d/conda.sh"
+        conda activate base
+        echo "::endgroup::"
     - name: bump version
       run: |
         set -euxo pipefail
