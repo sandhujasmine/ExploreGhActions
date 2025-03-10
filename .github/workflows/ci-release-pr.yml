@@ -51,11 +51,12 @@ jobs:
         MSG="chore(release): updated files for bump"
         cz bump --yes -ch --files-only
         git add -u .
-        git commit -m ${MSG}
+        # Safely commit message
+        printf "%s\n" "$MSG" | git commit -F -
 
         # Env vars to be consumed by create-pull-request action
         echo "BRANCH=release/${{ steps.get_version.outputs.PKG_NAME }}-${{ steps.get_version.outputs.SHORT_HASH }}" >> $GITHUB_ENV
-        echo "TITLE=${MSG} - ${{ steps.get_version.outputs.PKG_NAME }}-${{ steps.get_version.outputs.SHORT_HASH }}" >> $GITHUB_ENV
+        echo "TITLE=$MSG - ${{ steps.get_version.outputs.PKG_NAME }}-${{ steps.get_version.outputs.SHORT_HASH }}" >> $GITHUB_ENV
         echo "BODY_L1=Created PR to bump version & release ${{ steps.get_version.outputs.PKG_NAME }}" >> $GITHUB_ENV
       shell: bash
     - name: test cpr
