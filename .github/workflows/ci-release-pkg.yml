@@ -49,6 +49,7 @@ jobs:
       shell: bash
     - name: bump version
       env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         PARENT_HASH: ${{ steps.get_version.outputs.SHORT_HASH }}
         PKG_NAME: ${{ steps.get_version.outputs.PKG_NAME }}
       run: |
@@ -66,6 +67,22 @@ jobs:
         git push -u origin $BRANCH
         gh pr create -B main --title "$TITLE" --body "$BODY" --label "release" --label "automation"
       shell: bash
+    #- name: test cpr
+    #  id: cpr
+    #  uses: peter-evans/create-pull-request@v7
+    #  with:
+    #    # context is for creating a PR where base is main.
+    #    #   github.head_ref - name of the branch that has been merged
+    #    #   github.event.number - # of the PR that was just merged
+    #    token: ${{ secrets.TEST_TOKEN }}
+    #    branch: update-agent-api-wrapper/${{ github.head_ref }}
+    #    title: Build spec update from PR#${{ github.event.number }}
+    #    body: |
+    #      - Created upon merge of: [PR#${{ github.event.number }}](https://github.com/${{ github.event.repository }}/pull/${{ github.event.number }})
+    #      - Automated changes by [create-pull-request](https://github.com/peter-evans/create-pull-request) GitHub action
+    #    labels: |
+    #      automation
+    #      ${{ github.ref_name }}
     - name: Debug
       env:
         PARENT_HASH: ${{ steps.get_version.outputs.SHORT_HASH }}
