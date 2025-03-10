@@ -76,7 +76,7 @@ jobs:
 
         # Env vars to be consumed by create-pull-request action
         echo "BRANCH=release/${{ steps.get_version.outputs.PKG_NAME }}-${{ steps.get_version.outputs.SHORT_HASH }}" >> $GITHUB_ENV
-        echo "TITLE=ci(release): release package ${{ steps.get_version.outputs.PKG_NAME }}" >> $GITHUB_ENV
+        echo "TITLE=ci(release): release ${{ steps.get_version.outputs.PKG_NAME }} ${{ steps.get_version.outputs.SHORT_HASH }}" >> $GITHUB_ENV
         echo "BODY_L1=Created PR to bump version & release ${{ steps.get_version.outputs.PKG_NAME }}" >> $GITHUB_ENV
       shell: bash
     - name: test cpr
