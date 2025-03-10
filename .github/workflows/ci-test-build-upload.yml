@@ -21,6 +21,7 @@ permissions:
 
 jobs:
   build_config:
+    if: contains(github.event.pull_request.labels.*.name, 'release') == false
     name: Bump dev version & build dev package
     runs-on: ubuntu-latest
     defaults:
