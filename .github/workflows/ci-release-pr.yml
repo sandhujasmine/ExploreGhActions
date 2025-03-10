@@ -52,7 +52,7 @@ jobs:
         echo "::endgroup::"
         cd ${{ github.event.inputs.package }}
         echo "Bump version, make commit as a chore, then open PR"
-        MSG="chore(release): updated files for bump"
+        MSG="chore(release): version bump (update files only)"
         cz bump --yes -ch --files-only
         git add -u .
         # Safely commit message
