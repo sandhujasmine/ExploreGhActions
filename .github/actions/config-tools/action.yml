@@ -1,0 +1,28 @@
+#
+# For now install conda packages in base
+name: "Configure tools - miniconda, cz, github"
+description: "configure tools like cz"
+runs:
+  using: "composite"
+  steps:
+    - uses: conda-incubator/setup-miniconda@v3
+      with:
+        miniconda-version: "latest"
+        activate-environment: ""       # not creating a build env at present
+        channels: conda-forge,defaults # hard code channels for now
+    - name: Install conda-build, commitizen; prepare git
+      id: config_tools
+      run: |
+        # configure git; only used if PR is being generated
+        git config --global user.email "you@example.com"
+        git config --global user.name "PR-bot"
+
+        echo "::group::conda install"
+        # install & configure conda packages
+        conda install -y commitizen
+        conda install -y conda-build conda-repo-cli
+        conda install -y pip conda-forge::conda-lock anaconda-cloud::inject-cloudflare-headers
+        echo "::endgroup::"
+
+        echo "CONDA_PREFIX - ${CONDA_PREFIX}"
+        cz version

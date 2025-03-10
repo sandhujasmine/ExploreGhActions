@@ -30,13 +30,14 @@ jobs:
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
-    - name: Install commitizen; prepare git for commiting
-      id: config_tools
-      run: |
-        # simpler to use pip - couldn't figure out how to use conda env
-        pip install commitizen
-        git config --global user.email "you@example.com"
-        git config --global user.name "PR-bot"
+    - uses: ./.github/actions/config-tools
+    #- name: Install commitizen; prepare git for commiting
+    #  id: config_tools
+    #  run: |
+    #    # simpler to use pip - couldn't figure out how to use conda env
+    #    pip install commitizen
+    #    git config --global user.email "you@example.com"
+    #    git config --global user.name "PR-bot"
     - name: get short git hash; install commitizen
       id: get_version
       env:
@@ -47,36 +48,18 @@ jobs:
         PKG_NAME=${PKG_PATH##*/}
         echo "PKG_NAME=$PKG_NAME" >> $GITHUB_OUTPUT
       shell: bash
-    #- name: bump version
-    #  env:
-    #    GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #    PARENT_HASH: ${{ steps.get_version.outputs.SHORT_HASH }}
-    #    PKG_NAME: ${{ steps.get_version.outputs.PKG_NAME }}
-    #  run: |
-    #    set -euxo pipefail
-    #    BRANCH=release/${{ github.event.inputs.package }}-${PARENT_HASH}
-    #    TITLE=$BRANCH
-    #    BODY="- Created by manual trigger; branched at ${PARENT_HASH}"
-
-    #    git checkout -b $BRANCH
-    #    cd ${{ github.event.inputs.package }}
-    #    echo "Bump version in branch and create PR"
-    #    cz bump --yes -ch
-
-    #    echo "Open a PR for ${BRANCH}"
-    #    git push -u origin $BRANCH
-    #    gh pr create -B main --title "$TITLE" --body "$BODY" --label "release" --label "automation"
-    #  shell: bash
     - name: bump version
       run: |
         set -euxo pipefail
         cd ${{ github.event.inputs.package }}
-        echo "Bump version .."
-        cz bump --yes -ch
+        echo "Bump version, make commit as a chore, then open PR"
+        MSG="chore(release): updated files for bump"
+        cz bump --yes -ch --files-only
+        git commit -a -m ${MSG}
 
         # Env vars to be consumed by create-pull-request action
         echo "BRANCH=release/${{ steps.get_version.outputs.PKG_NAME }}-${{ steps.get_version.outputs.SHORT_HASH }}" >> $GITHUB_ENV
-        echo "TITLE=ci(release): release ${{ steps.get_version.outputs.PKG_NAME }} ${{ steps.get_version.outputs.SHORT_HASH }}" >> $GITHUB_ENV
+        echo "TITLE=${MSG} - ${{ steps.get_version.outputs.PKG_NAME }}-${{ steps.get_version.outputs.SHORT_HASH }}" >> $GITHUB_ENV
         echo "BODY_L1=Created PR to bump version & release ${{ steps.get_version.outputs.PKG_NAME }}" >> $GITHUB_ENV
       shell: bash
     - name: test cpr
