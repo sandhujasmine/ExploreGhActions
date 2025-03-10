@@ -77,7 +77,6 @@ jobs:
         labels: |
           automation
           release
-        shell: bash
     - name: Debug
       if: ${{ github.event.inputs.debug == 'true' || failure()  }}
       uses: mxschmitt/action-tmate@v3
