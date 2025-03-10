@@ -31,13 +31,6 @@ jobs:
       with:
         fetch-depth: 0
     - uses: ./.github/actions/config-tools
-    #- name: Install commitizen; prepare git for commiting
-    #  id: config_tools
-    #  run: |
-    #    # simpler to use pip - couldn't figure out how to use conda env
-    #    pip install commitizen
-    #    git config --global user.email "you@example.com"
-    #    git config --global user.name "PR-bot"
     - name: get short git hash; install commitizen
       id: get_version
       env:
@@ -51,13 +44,12 @@ jobs:
     - name: bump version
       run: |
         set -euxo pipefail
-        source "$CONDA/etc/profile.d/conda.sh"
-        conda activate base
         cd ${{ github.event.inputs.package }}
         echo "Bump version, make commit as a chore, then open PR"
         MSG="chore(release): updated files for bump"
         cz bump --yes -ch --files-only
-        git commit -a -m ${MSG}
+        git add -u .
+        git commit -m ${MSG}
 
         # Env vars to be consumed by create-pull-request action
         echo "BRANCH=release/${{ steps.get_version.outputs.PKG_NAME }}-${{ steps.get_version.outputs.SHORT_HASH }}" >> $GITHUB_ENV
