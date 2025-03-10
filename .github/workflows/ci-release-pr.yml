@@ -44,21 +44,22 @@ jobs:
     - name: bump version
       run: |
         set -euxo pipefail
+        echo "group::activate base"
         source "$CONDA/etc/profile.d/conda.sh"
         conda activate base
+        echo "endgroup::"
         cd ${{ github.event.inputs.package }}
         echo "Bump version, make commit as a chore, then open PR"
         MSG="chore(release): updated files for bump"
         cz bump --yes -ch --files-only
         git add -u .
         # Safely commit message
-        #printf "%s\n" "$MSG" | git commit -F -
         git commit -m "$MSG"
 
         # Env vars to be consumed by create-pull-request action
         echo "BRANCH=release/${{ steps.get_version.outputs.PKG_NAME }}-${{ steps.get_version.outputs.SHORT_HASH }}" >> $GITHUB_ENV
         echo "TITLE=$MSG - ${{ steps.get_version.outputs.PKG_NAME }}-${{ steps.get_version.outputs.SHORT_HASH }}" >> $GITHUB_ENV
-        echo "BODY_L1=Created PR to bump version & release ${{ steps.get_version.outputs.PKG_NAME }}" >> $GITHUB_ENV
+        echo "BODY_L1=PR to bump version & release ${{ steps.get_version.outputs.PKG_NAME }} from hash ${{ steps.get_version.outputs.SHORT_HASH }}" >> $GITHUB_ENV
       shell: bash
     - name: test cpr
       id: cpr
