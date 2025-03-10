@@ -31,7 +31,9 @@ jobs:
       with:
         fetch-depth: 0
     - uses: ./.github/actions/config-tools
-    - name: get short git hash; install commitizen
+      with:
+        auto-activate-base: true
+    - name: get short git hash
       id: get_version
       env:
         PKG_PATH: ${{ github.event.inputs.package }}
@@ -44,10 +46,10 @@ jobs:
     - name: bump version
       run: |
         set -euxo pipefail
-        echo "::group::activate base"
-        source "$CONDA/etc/profile.d/conda.sh"
-        conda activate base
-        echo "::endgroup::"
+        # echo "::group::activate base"
+        # source "$CONDA/etc/profile.d/conda.sh"
+        # conda activate base
+        # echo "::endgroup::"
         cd ${{ github.event.inputs.package }}
         echo "Bump version, make commit as a chore, then open PR"
         MSG="chore(release): updated files for bump"

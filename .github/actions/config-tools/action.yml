@@ -2,13 +2,19 @@
 # For now install conda packages in base
 name: "Configure tools - miniconda, cz, github"
 description: "configure tools like cz"
+inputs:
+  auto-activate-base:
+    description: "miniconda value for this variable (default: true)"
+    required: false
+    default: true
+
 runs:
   using: "composite"
   steps:
     - uses: conda-incubator/setup-miniconda@v3
       with:
         miniconda-version: "latest"
-        activate-environment: ""       # not creating a build env at present
+        auto-activate-base: ${{ inputs.auto-activate-base }}
         channels: conda-forge,defaults # hard code channels for now
     - name: Install conda-build, commitizen; prepare git
       id: config_tools
