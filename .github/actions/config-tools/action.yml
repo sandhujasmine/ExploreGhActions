@@ -4,6 +4,9 @@ name: "Configure tools - miniconda, cz, github"
 description: "configure tools like cz"
 runs:
   using: "composite"
+  defaults:
+    run:
+      shell: bash -el {0}
   steps:
     - uses: conda-incubator/setup-miniconda@v3
       with:
@@ -13,6 +16,8 @@ runs:
     - name: Install conda-build, commitizen; prepare git
       id: config_tools
       run: |
+        source "$CONDA/etc/profile.d/conda.sh"
+        conda activate base
         # configure git; only used if PR is being generated
         git config --global user.email "you@example.com"
         git config --global user.name "PR-bot"
@@ -26,4 +31,3 @@ runs:
 
         echo "CONDA_PREFIX - ${CONDA_PREFIX}"
         cz version
-      shell: bash
