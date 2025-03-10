@@ -44,10 +44,10 @@ jobs:
     - name: bump version
       run: |
         set -euxo pipefail
-        echo "group::activate base"
+        echo "::group::activate base"
         source "$CONDA/etc/profile.d/conda.sh"
         conda activate base
-        echo "endgroup::"
+        echo "::endgroup::"
         cd ${{ github.event.inputs.package }}
         echo "Bump version, make commit as a chore, then open PR"
         MSG="chore(release): updated files for bump"
