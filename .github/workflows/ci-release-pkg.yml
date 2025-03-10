@@ -74,29 +74,26 @@ jobs:
         echo "Bump version .."
         cz bump --yes -ch
 
+        # Env vars to be consumed by create-pull-request action
+        echo "BRANCH=release/${{ steps.get_version.outputs.PKG_NAME }}-${{ steps.get_version.outputs.SHORT_HASH }}" >> $GITHUB_ENV
+        echo "TITLE=ci(release): release package ${{ steps.get_version.outputs.PKG_NAME }}" >> $GITHUB_ENV
+        echo "BODY_L1=Created PR to bump version & release ${{ steps.get_version.outputs.PKG_NAME }}" >> $GITHUB_ENV
       shell: bash
     - name: test cpr
       id: cpr
-      env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        PARENT_HASH: ${{ steps.get_version.outputs.SHORT_HASH }}
-        PKG_NAME: ${{ steps.get_version.outputs.PKG_NAME }}
       uses: peter-evans/create-pull-request@v7
       with:
         # context is for creating a PR where base is main.
         #   github.head_ref - name of the branch that has been merged
         #   github.event.number - # of the PR that was just merged
-        branch: release/${PKG_NAME}-${PARENT_HASH}
-        title: "ci(release): release package ${PKG_NAME}"
+        branch: ${{ env.BRANCH }}
+        title: ${{ env.title }}
         body: |
-          - Created PR to bump version & release ${PKG_NAME}
+          - ${{ BODY_L1 }}
           - Automated changes by [create-pull-request](https://github.com/peter-evans/create-pull-request) GitHub action
         labels: |
           automation
           release
     - name: Debug
-      env:
-        PARENT_HASH: ${{ steps.get_version.outputs.SHORT_HASH }}
-        PKG_NAME: ${{ steps.get_version.outputs.PKG_NAME }}
       if: ${{ github.event.inputs.debug == 'true' || failure()  }}
       uses: mxschmitt/action-tmate@v3
