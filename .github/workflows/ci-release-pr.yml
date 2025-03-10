@@ -52,7 +52,8 @@ jobs:
         cz bump --yes -ch --files-only
         git add -u .
         # Safely commit message
-        printf "%s\n" "$MSG" | git commit -F -
+        #printf "%s\n" "$MSG" | git commit -F -
+        git commit -m "$MSG"
 
         # Env vars to be consumed by create-pull-request action
         echo "BRANCH=release/${{ steps.get_version.outputs.PKG_NAME }}-${{ steps.get_version.outputs.SHORT_HASH }}" >> $GITHUB_ENV
