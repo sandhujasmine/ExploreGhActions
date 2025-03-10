@@ -51,6 +51,8 @@ jobs:
     - name: bump version
       run: |
         set -euxo pipefail
+        source "$CONDA/etc/profile.d/conda.sh"
+        conda activate base
         cd ${{ github.event.inputs.package }}
         echo "Bump version, make commit as a chore, then open PR"
         MSG="chore(release): updated files for bump"
