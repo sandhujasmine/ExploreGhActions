@@ -39,15 +39,18 @@ jobs:
         git config --global user.name "PR-bot"
     - name: get short git hash; install commitizen
       id: get_version
+      env:
+        PKG_PATH: ${{ github.event.inputs.package }}
       run: |
         set -euxo pipefail
         echo "SHORT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-        PKG_NAME=${${{ github.event.inputs.package }}##*/}
+        PKG_NAME=${PKG_PATH##*/}
         echo "PKG_NAME=$PKG_NAME" >> $GITHUB_OUTPUT
       shell: bash
     - name: bump version
       env:
         PARENT_HASH: ${{ steps.get_version.outputs.SHORT_HASH }}
+        PKG_NAME: ${{ steps.get_version.outputs.PKG_NAME }}
       run: |
         set -euxo pipefail
         BRANCH=release/${{ github.event.inputs.package }}-${PARENT_HASH}
@@ -62,4 +65,9 @@ jobs:
         git push -u origin $BRANCH
         gh pr create -B main --title "$TITLE" --body "$BODY" --label "release" --label "automation"
       shell: bash
-      
+    - name: Debug
+      env:
+        PARENT_HASH: ${{ steps.get_version.outputs.SHORT_HASH }}
+        PKG_NAME: ${{ steps.get_version.outputs.PKG_NAME }}
+      if: ${{ github.event.inputs.debug == 'true' || failure()  }}
+      uses: mxschmitt/action-tmate@v3
