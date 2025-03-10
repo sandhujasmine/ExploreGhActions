@@ -87,7 +87,7 @@ jobs:
         #   github.head_ref - name of the branch that has been merged
         #   github.event.number - # of the PR that was just merged
         branch: ${{ env.BRANCH }}
-        title: ${{ env.title }}
+        title: ${{ env.TITLE }}
         body: |
           - ${{ env.BODY_L1 }}
           - Automated changes by [create-pull-request](https://github.com/peter-evans/create-pull-request) GitHub action
