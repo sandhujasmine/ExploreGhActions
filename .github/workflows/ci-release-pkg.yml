@@ -1,0 +1,65 @@
+#
+#
+name: Bump version, build release package, create PR
+on:
+  workflow_dispatch:
+    inputs:
+        package:
+          description: "build & upload release version of this package" 
+          required: true
+          type: choice
+          options:
+            - "pkg1"
+            - "agents/agent1"
+        debug:
+          description: 'ssh session to debug'
+          required: false
+          type: boolean
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  build_config:
+    name: Bump release version
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+    - name: Retrieve the source code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: Install commitizen; prepare git for commiting
+      id: config_tools
+      run: |
+        # simpler to use pip - couldn't figure out how to use conda env
+        pip install commitizen
+        git config --global user.email "you@example.com"
+        git config --global user.name "PR-bot"
+    - name: get short git hash; install commitizen
+      id: get_version
+      run: |
+        set -euxo pipefail
+        echo "SHORT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+        PKG_NAME=${${{ github.event.inputs.package }}##*/}
+        echo "PKG_NAME=$PKG_NAME" >> $GITHUB_OUTPUT
+      shell: bash
+    - name: bump version
+      env:
+        PARENT_HASH: ${{ steps.get_version.outputs.SHORT_HASH }}
+      run: |
+        set -euxo pipefail
+        BRANCH=release/${{ github.event.inputs.package }}-${PARENT_HASH}
+        TITLE=$BRANCH
+        BODY="- Created by manual trigger; branched at ${PARENT_HASH}"
+
+        git checkout -b $BRANCH
+        echo "Bump version in branch and create PR"
+        cz bump --yes -ch
+
+        echo "Open a PR for ${BRANCH}"
+        git push -u origin $BRANCH
+        gh pr create -B main --title "$TITLE" --body "$BODY" --label "release" --label "automation"
+      shell: bash
+      
