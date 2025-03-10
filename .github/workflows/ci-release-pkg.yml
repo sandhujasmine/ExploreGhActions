@@ -1,0 +1,60 @@
+name: Bump version to create tag; push tag & upload package
+on:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  build_upload:
+    if: >
+      github.event.pull_request.merged == true && 
+      contains(github.event.pull_request.labels.*.name, 'release')
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -el {0}
+    steps:
+    - name: Retrieve the source code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - uses: ./.github/actions/config-tools
+    - name: Get changed files in the PR using tj-actions/changed-files
+      id: changed_files
+      uses: tj-actions/changed-files@v34
+      with:
+        # This outputs the list of changed files to use in the next steps
+        files: 'true'  # This will output the files to a comma-separated list
+    - name: get package name
+      id: package_to_build
+      env:
+        ALL_CHANGED_FILES: ${{ steps.changed_files.outputs.all_changed_files }}
+        MATCH_REGEX: '(.*pyproject\.toml)'
+      run: |
+        echo "::group::activate base"
+        source "$CONDA/etc/profile.d/conda.sh"
+        conda activate base
+        echo "::endgroup::"
+        python scripts/app_dir_to_rebuild.py 
+    - name: bump version; push tags; build & upload pkg
+      env:
+        APP_DIR: ${{ steps.package_to_build.outputs.APP_DIR }}
+      run: |
+        set -euxo pipefail
+        echo "::group::activate base"
+        source "$CONDA/etc/profile.d/conda.sh"
+        conda activate base
+        echo "::endgroup::"
+
+        # Run cz bump to create a new tag
+        cd $APP_DIR
+        cz bump --yes # this should just create a new tag
+        # Get the newly created tag
+        TAG=$(git describe --tags --abbrev=0)
+        echo "Push tag: $TAG"
+        git push origin $TAG
+        conda build conda.recipe
+
+    - name: Debug
+      if: ${{ failure() }}
+      uses: mxschmitt/action-tmate@v3
