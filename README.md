@@ -4,9 +4,9 @@
 
 Thanks for contributing! Please choose a PR type below:
 
-- [🛠 Feature PR](https://github.com/acme/myrepo/compare/main?expand=1&template=feature.md)
-- [🐛 Bugfix PR](https://github.com/acme/myrepo/compare/main?expand=1&template=bug.md)
-- [📝 Docs PR](https://github.com/acme/myrepo/compare/main?expand=1&template=docs.md)
+- [🛠 Feature PR](https://github.com/sandhujasmine/ExploreGHActions/compare/main?expand=1&template=feature.md)
+- [🐛 Bugfix PR](https://github.com/sandhujasmine/ExploreGHActions/compare/main?expand=1&template=bug.md)
+- [📝 Docs PR](https://github.com/sandhujasmine/ExploreGHActions/compare/main?expand=1&template=docs.md)
 
 ## About
 
