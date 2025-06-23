@@ -2,6 +2,8 @@
 
 ## Opening a PR
 
+This is an awful way to do it - do not use templates!
+
 Thanks for contributing! Please choose a PR type below:
 
 - [🛠 Feature PR](https://github.com/sandhujasmine/ExploreGHActions/compare/main?expand=1&template=feature.md)
