@@ -1,15 +1,13 @@
 
 Please go to the `Preview` tab and select the appropriate sub-template:
 
-NOTE: PRs with title `fix/feat` included in the changelog.
+> [!NOTE]
+> By default PRs with title `fix/feat` included in the changelog. Check the project's pyproject.toml to see what PRs are included during changelog generation.
 
 * [fix](?title=fix%3A%20%5BJIRA%3AXXX%5D%20%3Cadd-PR-title%3E&expand=1&template=bug_fix.md)
 * [feat](?title=feat%3A%20%5BJIRA%3AXXX%5D%20%3Cadd-PR-title%3E&expand=1&template=feature.md)
 * [chore/docs/style/refactor/perf](?title=%3Cchore%2Fdocs%2Fstyle%2Frefactor%2Fperf%3E%3A%20%5BJIRA%3A%20XXX%5D&expand=1&template=feature.md)
 
----
-
-feat: [JIRA-ticket#] <!-- add-title-here -->
 <!-- 
 TITLE should be in following format, default scope is feat above:
 
@@ -35,64 +33,3 @@ Scopes with definitions:
 We use conventional commits spec: https://www.conventionalcommits.org/en/v1.0.0/
 And commitizen to manage version bumps & changelog
 -->
-
----
-
-# [JIRA Ticket](LINK_TO_STORY)
-
-## Description
-
-### What does this PR do?
-
-Provide a brief summary of the changes introduced by this PR.
-
-### Why are these changes needed?
-
-Explain the purpose of these changes and the problem they are solving.
-
-### Related issues
-
-Link to any related issues, if applicable (e.g., "Closes #123").
-
-## Type of Change
-
-### Please check the type of change your PR introduces
-
-- [ ] Bugfix (non-breaking change which fixes an issue)
-- [ ] Feature (non-breaking change which adds functionality)
-- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
-- [ ] Documentation
-- [ ] Miscellaneous
-
-## How Has This Been Tested?
-
-### Describe the tests that you ran to verify your changes
-
-- [ ] Unit tests
-- [ ] Integration tests
-- [ ] Manual testing
-- [ ] Other (please describe)
-
-### Testing steps
-
-1. Step one...
-2. Step two...
-3. ...
-
-## Checklist
-
-### Before submitting this PR, please make sure
-
-- [ ] I have performed a self-review of my own code.
-- [ ] I have commented my code, particularly in hard-to-understand areas.
-- [ ] I have made corresponding changes to the documentation.
-- [ ] I have updated or added tests for my changes.
-- [ ] I have run and passed the PR checks locally.
-
-## Screenshots (if applicable)
-
-Attach any screenshots that will help explain or visualize the changes.
-
-## Additional Comments
-
-Any other comments or additional information that reviewers should know.
