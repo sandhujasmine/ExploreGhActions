@@ -2,7 +2,7 @@
 Please go to the `Preview` tab and select the appropriate sub-template:
 
 > [!NOTE]
-> By default PRs with title `fix/feat` included in the changelog. Check the project's pyproject.toml to see what PRs are included during changelog generation.
+> By default `fix`, `feat` PRs are included in the changelog. Check the project's pyproject.toml to see what PRs are included during changelog generation.
 
 * [fix](?title=fix%3A%20%5BJIRA%3AXXX%5D%20%3Cadd-PR-title%3E&expand=1&template=bug_fix.md)
 * [feat](?title=feat%3A%20%5BJIRA%3AXXX%5D%20%3Cadd-PR-title%3E&expand=1&template=feature.md)
