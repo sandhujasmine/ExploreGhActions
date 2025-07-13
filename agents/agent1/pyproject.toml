@@ -21,3 +21,26 @@ package-dir = {"" = "src"}
 incremental = false              # Ensure it processes all commits, not just the latest
 prepend = true                   # Prepend new changelog entries to the file
 changelog_file = "CHANGELOG.md"  # Specify the changelog file name
+merge_prereleases = false        # Don't merge prerelease tags
+
+[tool.commitizen.customize]
+# regex tells Commitizen how to parse commit messages for the changelog.
+# - change_type: The commit type (feat, fix, etc.)
+# - scope: Optional (scope) value (e.g., feat(api): → scope is api)
+# - message: The main message
+changelog_pattern = r"(?P<change_type>\w*)(\((?P<scope>[\w\-\.\* ]*)\))?: (?P<message>.*)"
+message_template = "{{change_type}}{{scope and '(' + scope + ')' or ''}}: {{message}}"
+# feat results in minor bump; fix resutls in patch bump
+# other commit types ignored, they **do not** result in a bump
+changelog_increment_map = { "feat" = "MINOR", "fix" = "PATCH", "security" = "PATCH", "BREAKING CHANGE" = "MAJOR" }
+
+types = [
+  { type = "feat", section = "Added", hidden = false },
+  { type = "fix", section = "Fixed", hidden = false },
+  { type = "security", section = "Security", hidden = false },
+  { type = "refactor", section = "Changed", hidden = true },
+  { type = "docs", section = "Documentation", hidden = true },
+  { type = "chore", section = "Maintenance", hidden = true },
+  { type = "perf", section = "Performance", hidden = true },
+  { type = "test", section = "Tests", hidden = true },
+]
