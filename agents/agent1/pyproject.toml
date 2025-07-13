@@ -3,44 +3,64 @@ name = "agent1"
 version = "1.0.1"
 
 [tool.commitizen]
+# Use conventional commits specification with custom configuration
 name = "cz_conventional_commits"
-tag_format = "agent1/$version"  # this uses it from above
+# Tag format for releases (e.g., agent1/1.0.1)
+tag_format = "agent1/$version"
+# Semantic versioning scheme
 version_scheme = "semver"
+# Current version (will be updated by commitizen)
 version = "1.0.1"
+# Files to update when version changes
 version_files = [
     "src/agent1/__version__.py",
     "pyproject.toml",
 ]
-update_changelog_on_bump = false  # explicitly update changelog
+# Automatically update changelog when version is bumped
+update_changelog_on_bump = true
+# Allow major version 0 (for pre-1.0 releases)
 major_version_zero = false
 
 [tool.setuptools]
 package-dir = {"" = "src"}
 
 [tool.commitizen.changelog]
-incremental = false              # Ensure it processes all commits, not just the latest
-prepend = true                   # Prepend new changelog entries to the file
-changelog_file = "CHANGELOG.md"  # Specify the changelog file name
-merge_prereleases = false        # Don't merge prerelease tags
+# Process all commits, not just the latest (for full changelog)
+incremental = false
+# Add new entries at the top of the changelog file
+prepend = true
+# Name of the changelog file
+changelog_file = "CHANGELOG.md"
+# Don't merge prerelease tags (alpha, beta, rc) into main changelog
+merge_prereleases = false
 
 [tool.commitizen.customize]
-# regex tells Commitizen how to parse commit messages for the changelog.
-# - change_type: The commit type (feat, fix, etc.)
-# - scope: Optional (scope) value (e.g., feat(api): → scope is api)
-# - message: The main message
-changelog_pattern = r"(?P<change_type>\w*)(\((?P<scope>[\w\-\.\* ]*)\))?: (?P<message>.*)"
+# Regex pattern to parse conventional commit messages
+# Captures: change_type (feat, fix, etc.), scope (optional), and message
+# Examples: "feat(auth): add login" → type=feat, scope=auth, message=add login
+changelog_pattern = "(?P<change_type>\\w*)(\\((?P<scope>[\\w\\-\\.\\* ]*)\\))?: (?P<message>.*)"
+# Template for how changelog entries should be formatted
+# Includes scope in parentheses only when present
 message_template = "{{change_type}}{{scope and '(' + scope + ')' or ''}}: {{message}}"
-# feat results in minor bump; fix resutls in patch bump
-# other commit types ignored, they **do not** result in a bump
+# Which commit types trigger version bumps and what type of bump
+# - feat: MINOR (new features)
+# - fix: PATCH (bug fixes)
+# - security: PATCH (security fixes)
+# - BREAKING CHANGE: MAJOR (breaking changes)
 changelog_increment_map = { "feat" = "MINOR", "fix" = "PATCH", "security" = "PATCH", "BREAKING CHANGE" = "MAJOR" }
 
+# Define all supported commit types and their changelog behavior
 types = [
-  { type = "feat", section = "Added", hidden = false },
-  { type = "fix", section = "Fixed", hidden = false },
-  { type = "security", section = "Security", hidden = false },
-  { type = "refactor", section = "Changed", hidden = true },
-  { type = "docs", section = "Documentation", hidden = true },
-  { type = "chore", section = "Maintenance", hidden = true },
-  { type = "perf", section = "Performance", hidden = true },
-  { type = "test", section = "Tests", hidden = true },
+  # These types appear in the changelog (hidden = false)
+  { type = "feat", section = "Added", hidden = false },      # New features
+  { type = "fix", section = "Fixed", hidden = false },       # Bug fixes
+  { type = "security", section = "Security", hidden = false }, # Security fixes
+
+  # These types are recognized but don't appear in changelog (hidden = true)
+  { type = "refactor", section = "Changed", hidden = true },  # Code refactoring
+  { type = "docs", section = "Documentation", hidden = true }, # Documentation changes
+  { type = "chore", section = "Maintenance", hidden = true },  # Build/maintenance tasks
+  { type = "style", section = "Style", hidden = true },        # Code style changes
+  { type = "perf", section = "Performance", hidden = true },   # Performance improvements
+  { type = "test", section = "Tests", hidden = true },         # Test changes
 ]
