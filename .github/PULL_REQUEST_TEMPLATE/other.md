@@ -14,10 +14,10 @@ Link to any related issues, if applicable (e.g., "Closes #123").
 
 ### Please check the type of change your PR introduces
 
-- [x] Bugfix (non-breaking change which fixes an issue)
+- [ ] Bugfix (non-breaking change which fixes an issue)
 - [ ] Feature (non-breaking change which adds functionality)
 - [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
-- [ ] One of these other change types: chore/docs/style/refactor/perf. It does not automatically get included in the changelog
+- [x] One of these other change types: chore/docs/style/refactor/perf. It does not automatically get included in the changelog
 
 ## Testing
 

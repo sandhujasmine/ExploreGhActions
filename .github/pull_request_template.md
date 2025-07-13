@@ -1,8 +1,11 @@
 
 Please go to the `Preview` tab and select the appropriate sub-template:
 
-* [Bug fix](?title=fix%3A%5BJIRA%5D&expand=1&template=bug_fix.md)
-* [Feature](?expand=1&template=feature.md)
+NOTE: PRs with title `fix/feat` included in the changelog.
+
+* [fix](?title=fix%3A%20%5BJIRA%3AXXX%5D%20%3Cadd-PR-title%3E&expand=1&template=bug_fix.md)
+* [feat](?title=feat%3A%20%5BJIRA%3AXXX%5D%20%3Cadd-PR-title%3E&expand=1&template=feature.md)
+* [chore/docs/style/refactor/perf](?title=%3Cchore%2Fdocs%2Fstyle%2Frefactor%2Fperf%3E%3A%20%5BJIRA%3A%20XXX%5D&expand=1&template=feature.md)
 
 ---
 
