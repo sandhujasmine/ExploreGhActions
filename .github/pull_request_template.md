@@ -2,34 +2,48 @@
 Please go to the `Preview` tab and select the appropriate sub-template:
 
 > [!NOTE]
-> By default `fix`, `feat` PRs are included in the changelog. Check the project's pyproject.toml to see what PRs are included during changelog generation.
+> Not all change types are included in the changelog. Check the project's pyproject.toml to see available changes types and their inclusion status in changelog. Default behavior: [Commit Types section](#commit-types)
 
 * [fix](?title=fix%3A%20%5BJIRA%3AXXX%5D%20%3Cadd-PR-title%3E&expand=1&template=bug_fix.md)
 * [feat](?title=feat%3A%20%5BJIRA%3AXXX%5D%20%3Cadd-PR-title%3E&expand=1&template=feature.md)
-* [chore/docs/style/refactor/perf](?title=%3Cchore%2Fdocs%2Fstyle%2Frefactor%2Fperf%3E%3A%20%5BJIRA%3A%20XXX%5D&expand=1&template=other.md)
+* [chore](?title=chore%3A%20%5BJIRA%3AXXX%5D%20%3Cadd-PR-title%3E&expand=1&template=other.md)
+* [docs](?title=docs%3A%20%5BJIRA%3AXXX%5D%20%3Cadd-PR-title%3E&expand=1&template=other.md)
+* [style](?title=style%3A%20%5BJIRA%3AXXX%5D%20%3Cadd-PR-title%3E&expand=1&template=other.md)
+* [refactor](?title=refactor%3A%20%5BJIRA%3AXXX%5D%20%3Cadd-PR-title%3E&expand=1&template=other.md)
+* [perf](?title=perf%3A%20%5BJIRA%3AXXX%5D%20%3Cadd-PR-title%3E&expand=1&template=other.md)
+* [test](?title=test%3A%20%5BJIRA%3AXXX%5D%20%3Cadd-PR-title%3E&expand=1&template=other.md)
 
-<!-- 
-TITLE should be in following format, default scope is feat above:
+## PR guidelines ##
+We use conventional commits spec: https://www.conventionalcommits.org/en/v1.0.0/
+And commitizen to manage version bumps & changelog
+- PRs must follow coventional commit messages.
+- Scope is optional
 
-    scope: [JIRA-ticket-number] Concise PR title
+PR TITLE should be in following format, default scope is feat above:
+```
+    type(scope): [JIRA-ticket-number] Concise PR title
+```
 
-Scopes with definitions:
+Here's an example of a feature that introduces a breaking change.
+```
+feat(auth): [JIRA-123] switch to new login system
 
-  fix:  a commit of the type fix patches a bug in your codebase
-        (this correlates with PATCH in semantic versioning).
+BREAKING CHANGE: This removes support for legacy login.
+```
 
-  feat: a commit of the type feat introduces a new feature to the codebase
-        (this correlates with MINOR in semantic versioning).
+## Commit Types
 
-  BREAKING CHANGE: a commit that has the text BREAKING CHANGE: at the beginning of
-                   its optional body or footer section introduces a breaking API change
-                   (correlating with MAJOR in semantic versioning).
-
-  Others: commit types other than fix: and feat: are allowed,
-          like chore:, docs:, style:, refactor:, perf:, test:, and others.
-          Notice these types are not mandated by the conventional commits specification,
-          and have no implicit effect in semantic versioning (unless they include a BREAKING CHANGE).
+| Change Type | Description | Version Impact | Changelog |
+|------|-------------|----------------|-----------|
+| `fix` | Patches a bug in your codebase | PATCH | ✅ Included |
+| `feat` | Introduces a new feature to the codebase | MINOR | ✅ Included |
+| `chore` | Changes to build process or auxiliary tools | None | ❌ Excluded |
+| `docs` | Documentation only changes | None | ❌ Excluded |
+| `style` | Changes that do not affect the meaning of the code | None | ❌ Excluded |
+| `refactor` | Code change that neither fixes a bug nor adds a feature | None | ❌ Excluded |
+| `perf` | Code change that improves performance | None | ❌ Excluded |
+| `test` | Adding missing tests or correcting existing tests | None | ❌ Excluded |
+| `BREAKING CHANGE` | Introduces a breaking API change | MAJOR | ✅ Included |
 
 We use conventional commits spec: https://www.conventionalcommits.org/en/v1.0.0/
 And commitizen to manage version bumps & changelog
--->

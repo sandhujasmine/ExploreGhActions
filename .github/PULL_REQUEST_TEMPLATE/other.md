@@ -16,7 +16,8 @@ Link to any related issues, if applicable (e.g., "Closes #123").
 
 - [ ] Bugfix (non-breaking change which fixes an issue)
 - [ ] Feature (non-breaking change which adds functionality)
-- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
+- [ ] BREAKING CHANGE (fix or feature that would cause existing functionality to not work as expected)
+- [ ] Security (Change that impacts security)
 - [x] One of these other change types: chore/docs/style/refactor/perf. It does not automatically get included in the changelog
 
 ## Testing
