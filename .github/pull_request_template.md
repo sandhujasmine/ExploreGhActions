@@ -1,3 +1,11 @@
+
+Please go to the `Preview` tab and select the appropriate sub-template:
+
+* [Bug fix](?expand=1&template=bug_fix.md)
+* [Feature](?expand=1&template=feature.md)
+
+---
+
 feat: [JIRA-ticket#] <!-- add-title-here -->
 <!-- 
 TITLE should be in following format, default scope is feat above:
