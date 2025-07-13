@@ -1,7 +1,7 @@
 
 Please go to the `Preview` tab and select the appropriate sub-template:
 
-* [Bug fix](?expand=1&template=bug_fix.md)
+* [Bug fix](?title=fix%3A%5BJIRA%5D&expand=1&template=bug_fix.md)
 * [Feature](?expand=1&template=feature.md)
 
 ---
