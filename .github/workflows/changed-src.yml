@@ -43,7 +43,7 @@ jobs:
             **/src/**
           dir_names: true   # only want directory level
           base_sha: ${{ github.event.pull_request.base.sha }}   # PR base commit in `main` commit before merge
-          sha: ${{ github.event.pull_request.merge_commit_sha }}  # PR merge commit created after merging into `main`
+          sha: ${{ github.event.pull_request.head.sha }}  # PR head commit (works for all PR states)
 
       - name: Output changed files
         id: print_changed_files
