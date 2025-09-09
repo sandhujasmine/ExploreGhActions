@@ -9,9 +9,9 @@ on:
       - synchronize
     paths:
       # run on changes to any src files
-      - **/src/**
+      - "**/src/**"
       # added this for testing
-      - .github/workflows/changed-src.yml
+      - ".github/workflows/changed-src.yml"
 
 permissions:
   contents: write
