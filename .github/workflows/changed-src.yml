@@ -1,0 +1,54 @@
+name: "[changed-src] Check for changes in src/ dir"
+
+on:
+  pull_request:
+    types:
+      - closed
+      # following added for testing
+      - opened
+      - synchronize
+    paths:
+      # run on changes to any src files
+      - **/src/**
+      # added this for testing
+      - .github/workflows/changed-src.yml
+
+permissions:
+  contents: write
+  pull-requests: read
+
+# Each PR merge should use a different group since github.sha will be different
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: true
+
+jobs:
+  needs-version-bump:
+    name: Check for changes in src/ dir
+    if: (!contains(github.event.pull_request.labels.*.name, 'model-catalog-build'))
+    runs-on: self-hosted-amd64-medium-privileged-on-demand
+
+    steps:
+      - name: Checkout Repo
+        if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main'
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0  # Need full history for commitizen
+
+      - name: Get changed files in the PR
+        if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main'
+        id: changed_files
+        uses: tj-actions/changed-files@ed68ef82c095e0d48ec87eccea555d944a631a4c # v46.0.5
+        with:
+          files: |
+            **/src/**
+          dir_names: true   # only want directory level
+          base_sha: ${{ github.event.pull_request.base.sha }}   # PR base commit in `main` commit before merge
+          sha: ${{ github.event.pull_request.merge_commit_sha }}  # PR merge commit created after merging into `main`
+
+      - name: Output changed files
+        id: print_changed_files
+        run: |
+          echo "changed_files=$(echo ${{ steps.changed_files.outputs.all_modified_files }} | tr ' ' '\n')" >> $GITHUB_OUTPUT
+          echo "changed_files=$(echo ${{ steps.changed_files.outputs.all_modified_files }} | tr ' ' '\n')" >> $GITHUB_STEP_SUMMARY
