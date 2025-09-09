@@ -26,7 +26,7 @@ jobs:
   needs-version-bump:
     name: Check for changes in src/ dir
     if: (!contains(github.event.pull_request.labels.*.name, 'model-catalog-build'))
-    runs-on: self-hosted-amd64-medium-privileged-on-demand
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repo
