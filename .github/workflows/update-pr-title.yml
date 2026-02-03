@@ -1,0 +1,77 @@
+name: Update PR Title to Conventional Commit Format
+
+on:
+  pull_request:
+    types: [opened, edited]
+
+jobs:
+  update-pr-title:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    
+    steps:
+      - name: Extract PR Information
+        id: extract
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const prBody = context.payload.pull_request.body || '';
+            
+            // Extract JIRA ticket from format: JIRA: [AIC-2498](url)
+            const jiraMatch = prBody.match(/JIRA:\s*\[([A-Z]+-\d+)\]/i);
+            const jiraTicket = jiraMatch ? jiraMatch[1] : null;
+            
+            // Extract commit type
+            const commitTypeMatch = prBody.match(/commit_type:\s*(\w+)/i);
+            const commitType = commitTypeMatch ? commitTypeMatch[1] : null;
+            
+            // Extract package name
+            const packageMatch = prBody.match(/package_name:\s*([\w-]+)/i);
+            const packageName = packageMatch ? packageMatch[1] : null;
+            
+            // If any fields are missing, post a warning comment
+            if (!jiraTicket || !commitType || !packageName) {
+              const missingFields = [];
+              if (!jiraTicket) missingFields.push('`JIRA`');
+              if (!commitType) missingFields.push('`commit_type`');
+              if (!packageName) missingFields.push('`package_name`');
+              
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.payload.pull_request.number,
+                body: `⚠️ Could not auto-format PR title. Missing: ${missingFields.join(', ')}`
+              });
+              
+              return; // Exit without updating title
+            }
+            
+            // Get current PR title
+            const currentTitle = context.payload.pull_request.title;
+            
+            // Remove any existing conventional commit prefix to get clean description
+            const descriptionMatch = currentTitle.match(/^(?:\w+(?:\([^)]+\))?:\s*)?(.+)$/);
+            const description = descriptionMatch ? descriptionMatch[1] : currentTitle;
+            
+            // Build new title
+            const newTitle = `${commitType}(${packageName}): [${jiraTicket}] ${description}`;
+            
+            core.setOutput('new_title', newTitle);
+            core.setOutput('should_update', currentTitle !== newTitle);
+
+      - name: Update PR Title
+        if: steps.extract.outputs.should_update == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const newTitle = '${{ steps.extract.outputs.new_title }}';
+            
+            await github.rest.pulls.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number,
+              title: newTitle
+            });
+            
+            core.info(`Updated PR title to: ${newTitle}`);
