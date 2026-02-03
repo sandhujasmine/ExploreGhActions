@@ -11,8 +11,26 @@ jobs:
       pull-requests: write
     
     steps:
+      - name: Check if title already formatted
+        id: check
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const currentTitle = context.payload.pull_request.title;
+            
+            // Check if title already has conventional commit format with JIRA ticket
+            // Pattern: type(scope): description [TICKET-123]
+            const isFormatted = /^\w+\([^)]+\):.+\[[A-Z]+-\d+\]$/.test(currentTitle);
+            
+            core.setOutput('is_formatted', isFormatted);
+            
+            if (isFormatted) {
+              core.info('PR title already in conventional commit format. Skipping update.');
+            }
+
       - name: Extract PR Information
         id: extract
+        if: steps.check.outputs.is_formatted == 'false'
         uses: actions/github-script@v7
         with:
           script: |
@@ -55,13 +73,13 @@ jobs:
             const description = descriptionMatch ? descriptionMatch[1] : currentTitle;
             
             // Build new title
-            const newTitle = `${commitType}(${packageName}): [${jiraTicket}] ${description}`;
+            const newTitle = `${commitType}(${packageName}): ${description} [${jiraTicket}]`;
             
             core.setOutput('new_title', newTitle);
             core.setOutput('should_update', currentTitle !== newTitle);
 
       - name: Update PR Title
-        if: steps.extract.outputs.should_update == 'true'
+        if: steps.check.outputs.is_formatted == 'false' && steps.extract.outputs.should_update == 'true'
         uses: actions/github-script@v7
         with:
           script: |
